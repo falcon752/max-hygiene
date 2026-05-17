@@ -1,0 +1,681 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <title>Max-Hygiene - Professional Cleaning Services</title>
+    <meta name="description" content="Reliable, affordable, and eco-friendly cleaning services for homes and offices. Book your cleaning today!">
+    <link rel="shortcut icon" href="images/logo2.jpeg" type="image/x-icon">
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.0/css/all.min.css">
+    <link href="https://fonts.googleapis.com/css2?family=Poppins:wght@300;400;500;600;700&display=swap" rel="stylesheet">
+    <link rel="stylesheet" href="css/style.css">
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        nav.scrolled {
+            box-shadow: 0 4px 20px rgba(0, 0, 0, 0.15);
+        }
+        .nav-container {
+            max-width: 1200px;
+            margin: 0 auto;
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            padding: 1rem 2rem;
+        }
+        nav {
+            background: #fff;
+            box-shadow: 0 2px 10px rgba(0, 0, 0, 0.1);
+            position: fixed;
+            width: 100%;
+            top: 0;
+            z-index: 1000;
+            transition: all 0.3s ease;
+        }
+        .service-card {
+            background: white;
+            border: 2px solid #e0e0e0;
+            border-radius: 15px;
+            overflow: hidden;
+            transition: all 0.3s;
+        }
+        .service-card:hover {
+            border-color: #2196f3;
+            box-shadow: 0 10px 30px rgba(33, 150, 243, 0.2);
+        }
+        .services-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        .testimonial-author {
+            font-weight: bold;
+            color: #2196f3;
+        }
+        .features {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+            gap: 2rem;
+            margin-top: 3rem;
+        }
+        .testimonials-grid {
+            display: grid;
+            grid-template-columns: repeat(auto-fit, minmax(300px, 1fr));
+            gap: 2rem;
+        }
+        .form-row {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 1rem;
+        }
+        .btn-secondary:hover {
+            background: white;
+            color: #2196f3;
+        }
+    </style>
+</head>
+<body>
+    <!-- Mobile Header (Visible only on mobile) -->
+    <header class="mobile-header">
+        <div class="mobile-header-container">
+            <div class="mobile-logo">
+                <img src="images/logo1.png" alt="Max Hygeine Logo">
+            </div>
+            <button class="mobile-menu-toggle">
+                <i class="fas fa-bars"></i>
+            </button>
+        </div>
+    </header>
+
+    <!-- Sidebar Navigation -->
+    <nav class="sidebar">
+        <div class="logo">
+            <img src="images/logo1.png" alt="Max Hygeine Logo" class="logo-img">
+        </div>
+        <ul class="nav-links">
+            <li><a href="#home" class="active"><i class="fas fa-home"></i> Home</a></li>
+            <li><a href="#services"><i class="fas fa-broom"></i> Services</a></li>
+            <li><a href="#why-choose-us"><i class="fas fa-star"></i> Why Choose Us</a></li>
+            <li><a href="#about"><i class="fas fa-info-circle"></i> About</a></li>
+            <li><a href="#gallery"><i class="fas fa-images"></i> Gallery</a></li>
+            <li><a href="#testimonials"><i class="fas fa-quote-left"></i> Testimonials</a></li>
+            <li><a href="#contact"><i class="fas fa-envelope"></i> Contact</a></li>
+        </ul>
+        <div class="social-links">
+            <a href=""><i class="fab fa-facebook"></i></a>
+            <a href="#"><i class="fab fa-twitter"></i></a>
+            <a href="#"><i class="fab fa-instagram"></i></a>
+        </div>
+    </nav>
+
+    <!-- Mobile Menu Button -->
+    <div class="menu-btn">
+        <i class="fas fa-bars"></i>
+    </div>
+
+    <!-- Main Content -->
+    <main class="main-content">
+        <!-- Hero Section -->
+        <section id="home" class="hero">
+            <div class="hero-content">
+                <h1>Professional Cleaning Services in Glasgow and surroundings (30 Miles)</h1>
+                <p>We provide top-quality cleaning services for homes and offices across Glasgow and surroundings (30 Miles). Book now and experience the difference!</p>
+                <a href="#contact" class="btn btn-primary">Get a Free Quote</a>
+            </div>
+        </section>
+
+        <!-- Services Section -->
+        <section id="services" class="section">
+            <h2 class="section-title">Our Services</h2>
+            <p class="subtitle">Professional cleaning solutions tailored to your needs</p>
+            <div class="services-grid">
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-home"></i>
+                    </div>
+                    <h3>Residential Cleaning</h3>
+                    <p>Keep your home fresh and inviting with our regular cleaning services.</p>
+                    <ul class="service-features">
+                        <li>Weekly, bi-weekly, or monthly options</li>
+                        <li>Kitchen and bathroom deep cleaning</li>
+                        <li>Dusting, vacuuming, and mopping</li>
+                        <li>Customizable cleaning plans</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-building"></i>
+                    </div>
+                    <h3>Office Cleaning</h3>
+                    <p>Professional workspace cleaning for a productive environment.</p>
+                    <ul class="service-features">
+                        <li>After-hours cleaning available</li>
+                        <li>Sanitization of high-touch areas</li>
+                        <li>Restroom and break room maintenance</li>
+                        <li>Flexible scheduling</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-broom"></i>
+                    </div>
+                    <h3>Deep Cleaning</h3>
+                    <p>Intensive cleaning for a thorough refresh of your space.</p>
+                    <ul class="service-features">
+                        <li>Detailed cleaning of all areas</li>
+                        <li>Baseboard and window cleaning</li>
+                        <li>Appliance interior cleaning</li>
+                        <li>Carpet and upholstery treatment</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-truck-moving"></i>
+                    </div>
+                    <h3>Move-In/Move-Out</h3>
+                    <p>Make your move stress-free with our comprehensive cleaning.</p>
+                    <ul class="service-features">
+                        <li>Complete property cleaning</li>
+                        <li>Cabinet and closet cleaning</li>
+                        <li>Wall spot cleaning</li>
+                        <li>Ready for inspection</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-hammer"></i>
+                    </div>
+                    <h3>Post-Construction</h3>
+                    <p>Remove dust and debris after renovation or construction work.</p>
+                    <ul class="service-features">
+                        <li>Dust and debris removal</li>
+                        <li>Surface cleaning and polishing</li>
+                        <li>Window and glass cleaning</li>
+                        <li>Final touch-up cleaning</li>
+                    </ul>
+                </div>
+
+                <div class="feature-card">
+                    <div class="feature-icon">
+                        <i class="fas fa-glass-cheers"></i>
+                    </div>
+                    <h3>Event Cleanup</h3>
+                    <p>Before and after event cleaning for any occasion.</p>
+                    <ul class="service-features">
+                        <li>Pre-event preparation</li>
+                        <li>Post-event cleanup</li>
+                        <li>Trash removal and disposal</li>
+                        <li>Quick turnaround available</li>
+                    </ul>
+                </div>
+            </div>
+        </section>
+
+        <!-- Why Choose Us Section -->
+        <section id="why-choose-us" class="section" style="background-color: #f8fafc;">
+            <div class="container">
+                <h2 class="section-title">Why Choose Us</h2>
+                <p class="subtitle">Experience the difference with our professional cleaning services</p>
+                
+                <div class="features-grid">
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-tools"></i>
+                        </div>
+                        <h3>Professional Expertise & Equipment</h3>
+                        <p>"Everyone can clean, but not everyone can clean well". Our teams are professionally trained in the latest cleaning techniques and safety standards and use high-quality, professional-grade equipment and products to deliver superior results that in-house staff might struggle to achieve.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-shield-alt"></i>
+                        </div>
+                        <h3>Reliability & Consistency</h3>
+                        <p>We know that trust is the cornerstone of our business. Our professional staff are rigorously vetted (including PVG/DBS checks) and fully insured, ensuring a trustworthy and reliable service every time. We use systematic checklists and regular quality control checks to ensure a consistent, spotless result, so you never have to worry about cut corners.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-headset"></i>
+                        </div>
+                        <h3>Exceptional Customer Service</h3>
+                        <p>We pride ourselves on clear communication and a client-centric approach. You'll have a dedicated point of contact, such as an Account Manager or a Client Manager, who is readily available to address any concerns or last-minute requests promptly, day or night.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-tasks"></i>
+                        </div>
+                        <h3>Tailored Cleaning Solutions</h3>
+                        <p>We understand that every client has unique needs. We don't offer a "one-size-fits-all" service. Instead, we provide customized cleaning plans designed around your specific requirements, schedule, and budget, whether you need a daily, weekly, or monthly service, or a specialized deep clean.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-heartbeat"></i>
+                        </div>
+                        <h3>Health & Safety Commitment</h3>
+                        <p>We prioritize a healthy environment for your employees, family, or visitors. We use eco-friendly and non-toxic cleaning products upon request, reducing harmful chemical exposure and improving indoor air quality. A cleaner space means reduced germs and illness, contributing to fewer sick days and increased productivity.</p>
+                    </div>
+
+                    <div class="feature-card">
+                        <div class="feature-icon">
+                            <i class="fas fa-star"></i>
+                        </div>
+                        <h3>Proven Reputation</h3>
+                        <p>Our high client retention rates and glowing testimonials speak for themselves. Our growth is largely driven by word-of-mouth recommendations, a testament to our commitment to quality and client satisfaction.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- About Section -->
+        <section id="about" class="section">
+            <div class="about-container">
+                <div class="about-top-row">
+                    <div class="about-content">
+                        <h2 class="section-title">About Max-Hygiene</h2>
+                        <p>Max-Hygiene is a professional cleaning service company based in Glasgow, UK, dedicated to providing top-quality cleaning solutions for both residential and commercial properties. With several years of experience in the industry, we take pride in delivering exceptional service that exceeds our clients' expectations.</p>
+                    </div>
+                    
+                    <div class="about-image">
+                        <img src="https://plus.unsplash.com/premium_photo-1661663133172-02623c28fcef?w=500&auto=format&fit=crop&q=60&ixlib=rb-4.1.0&ixid=M3wxMjA3fDB8MHxzZWFyY2h8NXx8Q2xlYW5pbmclMjBzZXJ2aWNlcyUyMGdyb3VwfGVufDB8fDB8fHww" alt="Professional cleaning team at work">
+                    </div>
+                </div>
+                
+                <div class="about-grid">
+                    <div class="about-card">
+                        <i class="fas fa-users"></i>
+                        <h3>Professional Team</h3>
+                        <p>Our team consists of trained and vetted cleaning professionals who are committed to excellence in every service.</p>
+                    </div>
+                    
+                    <div class="about-card">
+                        <i class="fas fa-leaf"></i>
+                        <h3>Eco-Friendly</h3>
+                        <p>We use environmentally friendly cleaning products that are safe for your family, pets, and the planet.</p>
+                    </div>
+                    
+                    <div class="about-card">
+                        <i class="fas fa-star"></i>
+                        <h3>100% Satisfaction</h3>
+                        <p>Your satisfaction is our top priority. We're not happy until you're completely satisfied with our service.</p>
+                    </div>
+                    
+                    <div class="about-card">
+                        <i class="fas fa-calendar-alt"></i>
+                        <h3>Flexible Scheduling</h3>
+                        <p>We work around your busy schedule to provide cleaning services at your convenience.</p>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Pricing Section -->
+         <!--
+        <section id="pricing" style="background: #f8f9fa; padding: 4rem 0">
+            <div class="container">
+                <h2 class="section-title">Transparent Pricing</h2>
+                <p class="subtitle">Choose the package that works for you</p>
+                <div class="pricing-grid">
+                    <div class="pricing-card">
+                        <h3>Basic Clean</h3>
+                        <div class="price">
+                            $99<span class="price-period">/session</span>
+                        </div>
+                        <ul class="pricing-features">
+                            <li>Up to 1,500 sq ft</li>
+                            <li>2-3 bedrooms</li>
+                            <li>Kitchen & bathroom cleaning</li>
+                            <li>Vacuuming & mopping</li>
+                            <li>Dusting surfaces</li>
+                            <li>2-3 hour service</li>
+                        </ul>
+                        <a href="#booking" class="btn btn-primary">Book Now</a>
+                    </div>
+
+                    <div class="pricing-card featured">
+                        <h3>Deep Clean</h3>
+                        <div class="price">
+                            $179<span class="price-period">/session</span>
+                        </div>
+                        <ul class="pricing-features">
+                            <li>Up to 2,500 sq ft</li>
+                            <li>3-4 bedrooms</li>
+                            <li>Everything in Basic</li>
+                            <li>Baseboards & window sills</li>
+                            <li>Inside appliances</li>
+                            <li>Detailed scrubbing</li>
+                            <li>4-5 hour service</li>
+                        </ul>
+                        <a href="#booking" class="btn btn-primary">Most Popular</a>
+                    </div>
+
+                    <div class="pricing-card">
+                        <h3>Commercial</h3>
+                        <div class="price">
+                            Custom<span class="price-period">/quote</span>
+                        </div>
+                        <ul class="pricing-features">
+                            <li>Office spaces</li>
+                            <li>Retail locations</li>
+                            <li>After-hours service</li>
+                            <li>Flexible scheduling</li>
+                            <li>Volume discounts</li>
+                            <li>Long-term contracts</li>
+                        </ul>
+                        <a href="#booking" class="btn btn-primary">Get Quote</a>
+                    </div>
+                </div>
+                <p style="text-align: center; margin-top: 2rem; color: #666">
+                    Save 15% when you book recurring services (weekly or bi-weekly)
+                </p>
+            </div>
+        </section>
+        -->
+
+        <!-- Testimonials Section -->
+        <section id="testimonials" class="section" style="background-color: #f8f9fa;">
+            <h2 class="section-title">What Our Clients Say</h2>
+            <div class="testimonials-container">
+                <div class="testimonial">
+                    <div class="testimonial-content">
+                        <p>"The team at Max Hygiene did an amazing job cleaning my apartment. It was spotless when they finished! Highly recommended."</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <img src="https://media.istockphoto.com/id/1437816897/photo/business-woman-manager-or-human-resources-portrait-for-career-success-company-we-are-hiring.jpg?s=612x612&w=0&k=20&c=tyLvtzutRh22j9GqSGI33Z4HpIwv9vL_MZw_xOE19NQ=" alt="Client">
+                        <div>
+                            <h4>Sarah Johnson</h4>
+                            <span>Glasgow, UK</span>
+                        </div>
+                    </div>
+                </div>
+                <div class="testimonial">
+                    <div class="testimonial-content">
+                        <p>"Professional, punctual, and thorough. Our office has never looked better. Will definitely be using their services again."</p>
+                    </div>
+                    <div class="testimonial-author">
+                        <img src="https://media.istockphoto.com/id/483265467/photo/young-man-portrait.jpg?s=612x612&w=0&k=20&c=Wekoy7FIKmQduVqFSe3p40PbJiN4FvhHyLlfP9kEywQ=" alt="Client">
+                        <div>
+                            <h4>David Martins</h4>
+                            <span>Edinburgh, UK</span>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Gallery Section -->
+        <section id="gallery" class="section">
+            <h2 class="section-title">Our Work Gallery</h2>
+            <div class="gallery-grid">
+                <div class="gallery-item" style="background-image: url(images/img1.jpeg)">
+                    <div class="gallery-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>
+                <div class="gallery-item" style="background-image: url(images/img2.jpeg)">
+                    <div class="gallery-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>
+                <div class="gallery-item" style="background-image: url('https://img.freepik.com/free-photo/people-taking-care-office-cleaning_23-2149374442.jpg?t=st=1767727643~exp=1767731243~hmac=655328d995c7c55d6d909832b0c3f10f57d00632ebbe71f59309cf1fa7c89743&w=1480')">
+                    <div class="gallery-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>
+                <div class="gallery-item" style="background-image: url(images/img3.jpeg)">
+                    <div class="gallery-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>
+                 
+                <div class="gallery-item" style="background-image: url(images/img4.jpeg)">
+                    <div class="gallery-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>
+                <div class="gallery-item" style="background-image: url('https://media.istockphoto.com/id/2209016975/photo/young-man-in-uniform-vacuum-cleaning-the-floor-in-the-conference-room.jpg?s=612x612&w=0&k=20&c=ZMZxYxC4wiWGKkg4AFgzKmHQfpc5MU9XcCEogJYwBaQ=')">
+                    <div class="gallery-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>
+                <div class="gallery-item" style="background-image: url(images/img5.jpeg)">
+                    <div class="gallery-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>
+
+                <div class="gallery-item" style="background-image: url(images/img6.jpeg)">
+                    <div class="gallery-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>                
+                <div class="gallery-item" style="background-image: url('https://media.istockphoto.com/id/2203809252/photo/cleaning-person-looking-busy-while-cleaning-the-windows-in-the-office.jpg?s=612x612&w=0&k=20&c=2hkXUEiut4GK8uxLgVUqe7xx1exCnq7ngijSFCyhUpI=')">
+                    <div class="gallery-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>
+                <div class="gallery-item" style="background-image: url(images/img7.jpeg)">
+                     <div class="gallery-overlay">
+                        <i class="fas fa-search-plus"></i>
+                     </div>
+                 </div>
+                 <div class="gallery-item" style="background-image: url(images/img8.jpeg)">
+                    <div class="gallery-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>
+               <div class="gallery-item" style="background-image: url('https://media.istockphoto.com/id/2249019063/photo/portrait-of-happy-male-worker-from-house-cleaning-service-holding-mop-and-smiling.jpg?s=612x612&w=0&k=20&c=HXEI4qw6azXjCWw1ksRePSmMhfBcHObIUPQWZHfAN_M=')">
+                    <div class="gallery-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>
+                <div class="gallery-item" style="background-image: url(images/img9.jpeg)">
+                    <div class="gallery-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>
+                <div class="gallery-item" style="background-image: url(images/img10.jpeg)">
+                    <div class="gallery-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>
+                 <div class="gallery-item" style="background-image: url('https://media.istockphoto.com/id/2214684084/photo/office-cleaning-crew-on-duty.jpg?s=612x612&w=0&k=20&c=mX36NOulWdzMvKB1Ip6wZYO--olzp3BfpQ2qtLMHX9A=')">
+                    <div class="gallery-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>
+                <div class="gallery-item" style="background-image: url('https://media.istockphoto.com/id/2247850964/photo/young-team-of-janitors-in-uniform-washing-floor-with-caution-wet-floor-sign-at-home.jpg?s=612x612&w=0&k=20&c=isBx1YyR_eCIn7df1z39UvsAF-oXFEKYJXrmW38QDgI=')">
+                    <div class="gallery-overlay">
+                        <i class="fas fa-search-plus"></i>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Contact Section -->
+        <section id="contact" class="section">
+            <h2 class="section-title">Contact Us</h2>
+            <div class="contact-container">
+                <form id="contactForm" class="contact-form" onsubmit="return sendEmail(this);">
+                    <div class="form-group">
+                        <input type="text" id="name" name="name" required placeholder="Your Name">
+                    </div>
+                    <div class="form-group">
+                        <input type="email" id="email" name="email" required placeholder="Your Email">
+                    </div>
+                    <div class="form-group">
+                        <input type="tel" id="phone" name="phone" placeholder="Your Phone (Optional)">
+                    </div>
+                    <div class="form-group">
+                        <select id="service" name="service" required>
+                            <option value="" disabled selected>Select a Service</option>
+                            <option value="residential">Residential Cleaning</option>
+                            <option value="Shortlet/Airbnb">Shortlet/Airbnb</option>
+                            <option value="commercial">Commercial Cleaning</option>
+                            <option value="deep">Deep Cleaning</option>
+                            <option value="event">Event Cleanup</option>
+                        </select>
+                    </div>
+                    <div class="form-group">
+                        <textarea id="message" name="message" rows="5" placeholder="Your Message" required></textarea>
+                    </div>
+                    <button type="submit" class="btn btn-primary" id="submitBtn">
+                        <span class="btn-text">Send Message</span>
+                        <span class="btn-loader" style="display: none;">Sending...</span>
+                    </button>
+                </form>
+                <div class="contact-info">
+                    <div class="info-item">
+                        <i class="fas fa-map-marker-alt"></i>
+                        <p>Technology House/
+9 Newton Place
+Glasgow, UK <br>
+Post code: G3 7PR</p>
+                    </div>
+                    <!-- Add Google Map iframe -->
+                    
+                    <div class="info-item">
+                        <i class="fas fa-phone"></i>
+                        <p><a href="tel:+447743173136" class="contact-link">+44 7743173136</a></p>
+                    </div>
+                    <div class="info-item">
+                        <i class="fas fa-envelope"></i>
+                        <p><a href="mailto:MaxHygiene100@gmail.com" class="contact-link">MaxHygiene100@gmail.com</a></p>
+                    </div>
+                    <div class="map-container">
+                        <iframe 
+                            src="https://www.google.com/maps/embed?pb=!1m18!1m12!1m3!1d17903.093807008815!2d-4.28165009020668!3d55.86360029569352!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!3m3!1m2!1s0x488846a3c3f1e8c7%3A0x9f2b5f7c8a9e9c3e!2sTechnology%20House%2C%209%20Newton%20Pl%2C%20Glasgow%20G3%207PR%2C%20UK!5e0!3m2!1sen!2suk!4v1640000000000!5m2!1sen!2suk" 
+                            width="100%" 
+                            height="250" 
+                            style="border:0;" 
+                            allowfullscreen="" 
+                            loading="lazy">
+                        </iframe>
+                    </div>
+                </div>
+            </div>
+        </section>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-container">
+                <div class="footer-section">
+                    <div class="footer-logo">
+                        <img src="images/logo1.png" alt="Max Hygeine Logo">
+                        <p>Professional cleaning services in Glasgow, UK.</p>
+                    </div>
+                    <div class="footer-social">
+                        <a href="" target="_blank" aria-label="Facebook"><i class="fab fa-facebook-f"></i></a>
+                        <a href="#" target="_blank" aria-label="Twitter"><i class="fab fa-twitter"></i></a>
+                        <a href="#" target="_blank" aria-label="Instagram"><i class="fab fa-instagram"></i></a>
+                    </div>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Quick Links</h3>
+                    <ul class="footer-links">
+                        <li><a href="#home">Home</a></li>
+                        <li><a href="#services">Services</a></li>
+                        <li><a href="#about">About Us</a></li>
+                        <li><a href="#gallery">Gallery</a></li>
+                        <li><a href="#testimonials">Testimonials</a></li>
+                        <li><a href="#contact">Contact</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Our Services</h3>
+                    <ul class="footer-links">
+                        <li><a href="#services">Residential Cleaning</a></li>
+                        <li><a href="#services">Commercial Cleaning</a></li>
+                        <li><a href="#services">Deep Cleaning</a></li>
+                        <li><a href="#services">Office Cleaning</a></li>
+                        <li><a href="#services">Post-Construction</a></li>
+                    </ul>
+                </div>
+                
+                <div class="footer-section">
+                    <h3>Contact Us</h3>
+                    <div class="footer-contact">
+                        <p><i class="fas fa-map-marker-alt"></i> Technology House/ 9 Newton Place Glasgow, UK <br> Post code: G3 7PR</p>
+                        <p><i class="fas fa-phone"></i> +44 7743173136</p>
+                        <p><i class="fas fa-envelope"></i> MaxHygiene100@gmail.com</p>
+                    </div>
+                </div>
+            </div>
+            
+            <div class="footer-bottom">
+                <div class="container">
+                    <p>&copy; <span id="current-year">2026</span> MaxHygeine. All Rights Reserved.</p>
+                    <div class="footer-legal">
+                        <a href="#">Privacy Policy</a>
+                        <span>|</span>
+                        <a href="#">Terms of Service</a>
+                    </div>
+                </div>
+            </div>
+        </footer>
+     
+    </main>
+
+    <!-- EmailJS SDK -->
+    <script type="text/javascript" src="https://cdn.jsdelivr.net/npm/@emailjs/browser@3/dist/email.min.js"></script>
+    <script type="text/javascript">
+        (function() {
+            // Initialize EmailJS with your public key
+            emailjs.init('YOUR_PUBLIC_KEY'); // You'll need to replace this with your actual EmailJS public key
+        })();
+
+        function showLoader(show) {
+            const btn = document.getElementById('submitBtn');
+            const btnText = btn.querySelector('.btn-text');
+            const btnLoader = btn.querySelector('.btn-loader');
+            
+            if (show) {
+                btnText.style.display = 'none';
+                btnLoader.style.display = 'inline-block';
+                btn.disabled = true;
+            } else {
+                btnText.style.display = 'inline-block';
+                btnLoader.style.display = 'none';
+                btn.disabled = false;
+            }
+        }
+
+        function sendEmail(form) {
+            showLoader(true);
+            
+            // Get form data
+            const formData = new FormData(form);
+            const formObject = {};
+            formData.forEach((value, key) => {
+                formObject[key] = value;
+            });
+            
+            // Send email using EmailJS
+            emailjs.send('YOUR_SERVICE_ID', 'YOUR_TEMPLATE_ID', formObject)
+                .then(function(response) {
+                    showLoader(false);
+                    alert('Thank you for your message! We will get back to you soon.');
+                    form.reset();
+                }, function(error) {
+                    showLoader(false);
+                    console.error('Failed to send message:', error);
+                    alert('Sorry, something went wrong. Please try again later or contact us directly at Maxhygiene100@gmail.com');
+                });
+                
+            return false; // Prevent form from submitting normally
+        }
+    </script>
+    <script src="js/script.js"></script>
+</body>
+</html>
