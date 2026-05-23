@@ -956,8 +956,13 @@
         state.pricingType = type;
         document.getElementById('btnFlat').classList.toggle('active', type === 'flat');
         document.getElementById('btnHourly').classList.toggle('active', type === 'hourly');
-        document.getElementById('hourlyControls').style.display    = type === 'hourly' ? 'block' : 'none';
-        document.getElementById('flatItemsSection').style.display  = type === 'flat'   ? 'block' : 'none';
+        document.getElementById('hourlyControls').style.display   = type === 'hourly' ? 'block' : 'none';
+        document.getElementById('flatItemsSection').style.display = type === 'flat'   ? 'block' : 'none';
+        document.getElementById('extrasSection').style.display    = type === 'flat'   ? 'block' : 'none';
+        if (type === 'hourly') {
+            state.addons = [];
+            renderAddonGrid();
+        }
         calculatePrice();
         updatePricePanel();
     }
