@@ -27,7 +27,26 @@ const ADMIN_EMAIL = 'atikuquadrisegun@gmail.com';
 $input = file_get_contents('php://input');
 $data  = json_decode($input, true);
 
-if (!$data || !isset($data['adminData'], $data['clientData'])) {
+if (!$data) {
+    http_response_code(400);
+    echo json_encode(['success' => false, 'error' => 'Invalid request data']);
+    exit;
+}
+
+// ── Lead capture (Step 0 early contact) ──
+if (isset($data['leadData'])) {
+    $lead   = $data['leadData'];
+    $subject = 'New Lead: ' . c($lead['name'] ?? 'Unknown') . ' — Max-Hygiene';
+    $result  = smtp_send(ADMIN_EMAIL, FROM_NAME, $subject, buildLeadEmail($lead));
+    echo json_encode($result['ok']
+        ? ['success' => true]
+        : ['success' => false, 'error' => $result['err']]
+    );
+    exit;
+}
+
+// ── Full booking ──
+if (!isset($data['adminData'], $data['clientData'])) {
     http_response_code(400);
     echo json_encode(['success' => false, 'error' => 'Invalid request data']);
     exit;
@@ -116,6 +135,60 @@ function smtp_send(string $to, string $toName, string $subject, string $html): a
 function c($v): string
 {
     return htmlspecialchars(strip_tags(trim((string)$v)), ENT_QUOTES, 'UTF-8');
+}
+
+// ────────────────────────────────────────────
+// Lead capture email (Step 0 early contact)
+// ────────────────────────────────────────────
+function buildLeadEmail(array $d): string
+{
+    $name  = c($d['name']  ?? '');
+    $email = c($d['email'] ?? '');
+    $phone = c($d['phone'] ?? '');
+    $time  = date('d M Y, H:i');
+
+    return <<<HTML
+<!DOCTYPE html><html><head><meta charset="UTF-8"></head>
+<body style="margin:0;padding:0;background:#f7fafc;font-family:Arial,sans-serif;">
+<table width="100%" cellpadding="0" cellspacing="0" style="background:#f7fafc;padding:30px 0;">
+<tr><td align="center">
+<table width="560" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.08);">
+
+  <tr><td style="background:linear-gradient(135deg,#3bb0bd,#2d3748);padding:26px 40px;text-align:center;">
+    <h1 style="color:#fff;margin:0;font-size:20px;font-weight:700;">&#128276; New Lead Captured</h1>
+    <p style="color:rgba(255,255,255,.75);margin:6px 0 0;font-size:13px;">A visitor started the booking form — contact them to close the booking.</p>
+  </td></tr>
+
+  <tr><td style="padding:28px 40px;">
+    <table width="100%" cellpadding="8" cellspacing="0" style="border:1px solid #e2e8f0;border-radius:10px;overflow:hidden;">
+      <tr style="background:#f7fafc;">
+        <td style="color:#718096;font-size:13px;width:35%;border-bottom:1px solid #e2e8f0;">Full Name</td>
+        <td style="font-weight:600;color:#2d3748;font-size:13px;border-bottom:1px solid #e2e8f0;">$name</td>
+      </tr>
+      <tr>
+        <td style="color:#718096;font-size:13px;border-bottom:1px solid #e2e8f0;">Email</td>
+        <td style="font-size:13px;border-bottom:1px solid #e2e8f0;"><a href="mailto:$email" style="color:#3bb0bd;font-weight:600;text-decoration:none;">$email</a></td>
+      </tr>
+      <tr style="background:#f7fafc;">
+        <td style="color:#718096;font-size:13px;">Phone</td>
+        <td style="font-weight:600;color:#2d3748;font-size:13px;">$phone</td>
+      </tr>
+    </table>
+
+    <p style="margin:18px 0 0;font-size:12px;color:#a0aec0;text-align:center;">Submitted: $time</p>
+
+    <div style="margin-top:20px;text-align:center;">
+      <a href="mailto:$email" style="display:inline-block;background:#3bb0bd;color:#fff;padding:10px 28px;border-radius:8px;font-size:14px;font-weight:600;text-decoration:none;">Email This Lead</a>
+    </div>
+  </td></tr>
+
+  <tr><td style="background:#2d3748;padding:12px 40px;text-align:center;">
+    <p style="color:rgba(255,255,255,.4);margin:0;font-size:11px;">Max-Hygiene &bull; Glasgow G3 7PR &bull; +44 7743173136</p>
+  </td></tr>
+</table>
+</td></tr></table>
+</body></html>
+HTML;
 }
 
 // ────────────────────────────────────────────

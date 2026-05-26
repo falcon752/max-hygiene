@@ -305,7 +305,7 @@
         }
         .qty-btn:hover { background: #3bb0bd; color: #fff; border-color: #3bb0bd; }
         .qty-value   { font-size: 2.1rem; font-weight: 700; color: #2d3748; min-width: 46px; }
-        .qty-subtotal { font-size: .88rem; font-weight: 600; color: #3bb0bd; margin-bottom: 1.3rem; min-height: 1.2rem; }
+        .qty-subtotal { font-size: .88rem; font-weight: 600; color: #3bb0bd; margin-bottom: 1.3rem; min-height: 1.2rem; display: none; }
         .qty-btn-remove {
             width: 100%; padding: .52rem; background: none; border: 1.5px solid #fc5c7d;
             border-radius: 8px; color: #fc5c7d; cursor: pointer; font-size: .8rem; font-weight: 500;
@@ -581,26 +581,30 @@
         <!-- Hero -->
         <div class="booking-hero">
             <h1><i class="fas fa-calendar-check" style="margin-right:.5rem;"></i>Book Your Cleaning</h1>
-            <p>Professional cleaning across Glasgow &amp; surroundings (30 miles). Instant quote, no payment online.</p>
+            <!-- <p>Professional cleaning across Glasgow &amp; surroundings (30 miles). Instant quote, no payment online.</p> -->
         </div>
 
         <!-- Progress Bar -->
         <div class="booking-progress">
             <div class="progress-steps">
-                <div class="progress-step active" data-step="1">
+                <div class="progress-step active" data-step="0">
                     <div class="step-bubble">1</div>
+                    <span class="step-label">Contact</span>
+                </div>
+                <div class="progress-step" data-step="1">
+                    <div class="step-bubble">2</div>
                     <span class="step-label">Service</span>
                 </div>
                 <div class="progress-step" data-step="2">
-                    <div class="step-bubble">2</div>
+                    <div class="step-bubble">3</div>
                     <span class="step-label">Details</span>
                 </div>
                 <div class="progress-step" data-step="3">
-                    <div class="step-bubble">3</div>
+                    <div class="step-bubble">4</div>
                     <span class="step-label">Schedule</span>
                 </div>
                 <div class="progress-step" data-step="4">
-                    <div class="step-bubble">4</div>
+                    <div class="step-bubble">5</div>
                     <span class="step-label">Your Info</span>
                 </div>
                 <div class="progress-step" data-step="5">
@@ -615,14 +619,53 @@
             <!-- Steps -->
             <div class="booking-main">
 
+                <!-- ── STEP 0: Initial Contact Capture ── -->
+                <div class="step-card active" id="step-0">
+                    <div class="step-card-title">Let's Get Started</div>
+                    <div class="step-card-subtitle">Enter your details and we'll follow up with your personalised quote — even if you don't complete the booking right now.</div>
+                    <form class="booking-form" id="initialContactForm" novalidate>
+                        <div class="form-section-title">Your Contact Details</div>
+                        <div class="form-grid-2">
+                            <div class="form-group">
+                                <label for="ic-firstName">First Name *</label>
+                                <input type="text" id="ic-firstName" placeholder="John" required>
+                                <div class="field-error" id="err-ic-firstName">Please enter your first name.</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="ic-lastName">Last Name *</label>
+                                <input type="text" id="ic-lastName" placeholder="Smith" required>
+                                <div class="field-error" id="err-ic-lastName">Please enter your last name.</div>
+                            </div>
+                        </div>
+                        <div class="form-grid-2">
+                            <div class="form-group">
+                                <label for="ic-email">Email Address *</label>
+                                <input type="email" id="ic-email" placeholder="john@example.com" required>
+                                <div class="field-error" id="err-ic-email">Please enter a valid email address.</div>
+                            </div>
+                            <div class="form-group">
+                                <label for="ic-phone">Phone Number *</label>
+                                <input type="tel" id="ic-phone" placeholder="+44 7700 000000" required>
+                                <div class="field-error" id="err-ic-phone">Please enter a valid phone number.</div>
+                            </div>
+                        </div>
+                    </form>
+                    <div class="step-actions">
+                        <span></span>
+                        <button class="btn-continue" onclick="submitInitialContact()">
+                            Continue <i class="fas fa-arrow-right"></i>
+                        </button>
+                    </div>
+                </div>
+
                 <!-- ── STEP 1: Service ── -->
-                <div class="step-card active" id="step-1">
+                <div class="step-card" id="step-1">
                     <div class="step-card-title">Choose Your Service</div>
                     <div class="step-card-subtitle">Select the type of cleaning you need.</div>
                     <div class="service-select-grid" id="serviceGrid"></div>
                     <div class="step-validate-hint" id="hint1">Please select a service to continue.</div>
                     <div class="step-actions">
-                        <span></span>
+                        <button class="btn-back" onclick="goToStep(0)"><i class="fas fa-arrow-left"></i> Back</button>
                         <button class="btn-continue" onclick="goToStep(2)">
                             Continue <i class="fas fa-arrow-right"></i>
                         </button>
@@ -656,7 +699,7 @@
 
                     <!-- Flat: room & task selection -->
                     <div id="flatItemsSection">
-                        <div class="form-section-title" style="margin-top:1rem;">Rooms &amp; Tasks <span style="font-weight:400;color:#718096;">(select what you need)</span></div>
+                        <!-- <div class="form-section-title" style="margin-top:1rem;">Rooms &amp; Tasks <span style="font-weight:400;color:#718096;">(select what you need)</span></div> -->
                         <div class="addon-grid" id="flatItemsGrid"></div>
                     </div>
 
@@ -803,12 +846,12 @@
 
                         <div class="quote-summary-card" id="quoteSummaryCard"></div>
 
-                        <div class="confirm-note">
+                        <!-- <div class="confirm-note">
                             <i class="fas fa-info-circle"></i>
                             <span>
                                 <strong>No payment required today.</strong> If you chose a flat rate, we'll finalise the price with you directly. Hourly jobs are billed after the clean based on actual time.
                             </span>
-                        </div>
+                        </div> -->
 
                         <a href="/" class="btn-home">
                             <i class="fas fa-home"></i> Back to Home
@@ -819,7 +862,7 @@
             </div>
 
             <!-- Price Panel -->
-            <aside class="booking-panel" id="pricePanel">
+            <aside class="booking-panel hidden" id="pricePanel">
                 <div class="panel-title"><i class="fas fa-receipt"></i> Estimated Cost</div>
                 <div id="pricePanelContent">
                     <div class="panel-placeholder">
@@ -944,7 +987,7 @@
 
     // ── Booking state ──
     const state = {
-        step: 1,
+        step: 0,
         service: null,
         propertyType: 'house',
         pricingType: 'flat',
@@ -1354,10 +1397,57 @@
         });
 
         state.step = target;
-        const showPanel = target < 5;
+        const showPanel = target >= 1 && target < 5;
         document.getElementById('pricePanel').classList.toggle('hidden', !showPanel);
+
+        // Pre-fill Step 4 fields from early-capture contact data
+        if (target === 4 && state.contact.firstName) {
+            ['firstName', 'lastName', 'email', 'phone'].forEach(key => {
+                const el = document.getElementById(key);
+                if (el && !el.value) el.value = state.contact[key] || '';
+            });
+        }
+
         updatePricePanel();
         window.scrollTo({ top: 0, behavior: 'smooth' });
+    }
+
+    // ── Initial contact capture (Step 0) ──
+    function submitInitialContact() {
+        const fields = [
+            { id: 'ic-firstName', key: 'firstName', test: v => v.length >= 2 },
+            { id: 'ic-lastName',  key: 'lastName',  test: v => v.length >= 2 },
+            { id: 'ic-email',     key: 'email',     test: v => /^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(v) },
+            { id: 'ic-phone',     key: 'phone',     test: v => v.replace(/\D/g, '').length >= 7 }
+        ];
+        let valid = true;
+        fields.forEach(({ id, key, test }) => {
+            const el  = document.getElementById(id);
+            const err = document.getElementById(`err-${id}`);
+            const ok  = test(el.value.trim());
+            el.classList.toggle('error', !ok);
+            if (err) err.style.display = ok ? 'none' : 'block';
+            if (!ok) valid = false;
+            else state.contact[key] = el.value.trim();
+        });
+        if (!valid) return;
+
+        // Fire-and-forget lead notification — don't block the customer
+        if (location.protocol !== 'file:') {
+            fetch('send-booking.php', {
+                method:  'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body:    JSON.stringify({
+                    leadData: {
+                        name:  `${state.contact.firstName} ${state.contact.lastName}`,
+                        email: state.contact.email,
+                        phone: state.contact.phone
+                    }
+                })
+            }).catch(() => {}); // silently ignore failures
+        }
+
+        goToStep(1);
     }
 
     function validateStep(step) {
