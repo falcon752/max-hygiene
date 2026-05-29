@@ -58,6 +58,9 @@
         .progress-step.active:not(:last-child)::after {
             background: #3bb0bd;
         }
+        .progress-step.done, .progress-step.active {
+            cursor: pointer;
+        }
         .step-bubble {
             width: 36px; height: 36px;
             border-radius: 50%;
@@ -69,10 +72,15 @@
             z-index: 1;
         }
         .progress-step.active .step-bubble  { background: #3bb0bd; color: #fff; box-shadow: 0 0 0 4px rgba(59,176,189,.2); }
-        .progress-step.done   .step-bubble  { background: #00d97e; color: #fff; }
+        .progress-step.done   .step-bubble  { background: #3bb0bd; color: transparent; position: relative; }
+        .progress-step.done   .step-bubble::after {
+            content: "\f00c"; font-family: "Font Awesome 6 Free", "Font Awesome 5 Free"; font-weight: 900;
+            color: #fff; position: absolute;
+            top: 50%; left: 50%; transform: translate(-50%, -50%);
+        }
         .step-label { font-size: .72rem; color: #718096; margin-top: .35rem; font-weight: 500; white-space: nowrap; }
         .progress-step.active .step-label { color: #3bb0bd; font-weight: 600; }
-        .progress-step.done   .step-label { color: #00d97e; }
+        .progress-step.done   .step-label { color: #3bb0bd; }
 
         /* Layout */
         .booking-layout {
@@ -194,19 +202,20 @@
 
         /* Pricing toggle */
         .pricing-toggle-wrap {
-            display: flex; align-items: center;
+            display: flex; align-items: stretch;
             background: #f7fafc;
-            border-radius: 10px;
-            padding: .3rem;
-            gap: .2rem;
-            width: fit-content;
-            margin: .8rem 0;
+            border-radius: 12px;
+            padding: .4rem;
+            gap: .4rem;
+            width: 100%;
+            margin: .8rem 0 1.5rem;
         }
         .pricing-toggle-btn {
-            padding: .5rem 1.3rem;
-            border-radius: 8px;
+            flex: 1;
+            padding: .8rem 1.5rem;
+            border-radius: 10px;
             border: none; cursor: pointer;
-            font-size: .875rem; font-weight: 500;
+            font-size: 1.05rem; font-weight: 600;
             color: #718096; background: transparent;
             transition: all .2s;
         }
@@ -621,8 +630,8 @@
 
                 <!-- ── STEP 0: Initial Contact Capture ── -->
                 <div class="step-card active" id="step-0">
-                    <div class="step-card-title">Let's Get Started</div>
-                    <div class="step-card-subtitle">Enter your details and we'll follow up with your personalised quote — even if you don't complete the booking right now.</div>
+                    <div class="step-card-title">Contact Information</div>
+                    <div class="step-card-subtitle">Please share your contact information so we can prepare a tailored quote for you. You’re under no obligation to proceed after receiving it.</div>
                     <form class="booking-form" id="initialContactForm" novalidate>
                         <div class="form-section-title">Your Contact Details</div>
                         <div class="form-grid-2">
@@ -644,12 +653,13 @@
                                 <div class="field-error" id="err-ic-email">Please enter a valid email address.</div>
                             </div>
                             <div class="form-group">
-                                <label for="ic-phone">Phone Number *</label>
-                                <input type="tel" id="ic-phone" placeholder="+44 7700 000000" required>
-                                <div class="field-error" id="err-ic-phone">Please enter a valid phone number.</div>
+                                <label for="ic-phone">Mobile number *</label>
+                                <input type="tel" id="ic-phone" placeholder="+44 7XXXXXXXX" required>
+                                <div class="field-error" id="err-ic-phone">Please enter a valid mobile number.</div>
                             </div>
                         </div>
                     </form>
+                    <p style="font-size: .8rem; color: #718096; margin-top: 1rem; text-align: center;"><i class="fas fa-lock" style="margin-right: .3rem;"></i>Your information is secure and will only be used for this quote.</p>
                     <div class="step-actions">
                         <span></span>
                         <button class="btn-continue" onclick="submitInitialContact()">
@@ -677,15 +687,6 @@
                     <div class="step-card-title">Cleaning Details</div>
                     <div class="step-card-subtitle">Help us size up the job so your quote is accurate.</div>
 
-                    <!-- Property Type -->
-                    <div class="form-section-title">Property Type</div>
-                    <div class="option-pills" id="propertyTypePills">
-                        <div class="pill active" data-val="house">House</div>
-                        <div class="pill" data-val="apartment">Apartment / Flat</div>
-                        <div class="pill" data-val="office">Office / Commercial</div>
-                        <div class="pill" data-val="other">Other</div>
-                    </div>
-
                     <!-- Pricing Type -->
                     <div class="form-section-title">Pricing Type</div>
                     <div class="pricing-toggle-wrap">
@@ -695,6 +696,15 @@
                         <button class="pricing-toggle-btn" id="btnHourly" onclick="setPricingType('hourly')">
                             <i class="fas fa-clock"></i> Hourly Rate
                         </button>
+                    </div>
+
+                    <!-- Property Type -->
+                    <div class="form-section-title">Property Type</div>
+                    <div class="option-pills" id="propertyTypePills">
+                        <div class="pill active" data-val="house">House</div>
+                        <div class="pill" data-val="apartment">Apartment / Flat</div>
+                        <div class="pill" data-val="office">Office / Commercial</div>
+                        <div class="pill" data-val="other">Other</div>
                     </div>
 
                     <!-- Flat: room & task selection -->
@@ -978,9 +988,9 @@
 
     const FREQUENCIES = [
         { id: 'oneTime',   label: 'One-Time',       discount: 0,    badge: null,       desc: 'Single visit' },
-        { id: 'weekly',    label: 'Weekly',          discount: 0.15, badge: 'Save 15%', desc: 'Every week' },
-        { id: 'biweekly',  label: 'Every 2 Weeks',   discount: 0.10, badge: 'Save 10%', desc: 'Fortnightly' },
-        { id: 'monthly',   label: 'Monthly',         discount: 0.05, badge: 'Save 5%',  desc: 'Once a month' }
+        { id: 'weekly',    label: 'Weekly',          discount: 0.09, badge: 'Save 9%',  desc: 'Every week' },
+        { id: 'biweekly',  label: 'Every 2 Weeks',   discount: 0.06, badge: 'Save 6%',  desc: 'Fortnightly' },
+        { id: 'monthly',   label: 'Monthly',         discount: 0.03, badge: 'Save 3%',  desc: 'Once a month' }
     ];
 
     const TIME_SLOTS_ALL = ['08:00', '09:00', '10:00', '11:00', '13:00', '14:00', '15:00', '16:00'];
@@ -1016,6 +1026,16 @@
         renderCalendar();
         document.getElementById('current-year').textContent = now.getFullYear();
         initPillListeners('propertyTypePills', 'propertyType');
+
+        // Make progress steps clickable
+        document.querySelectorAll('.progress-step').forEach(el => {
+            el.addEventListener('click', () => {
+                const step = parseInt(el.dataset.step);
+                if (el.classList.contains('done') || el.classList.contains('active')) {
+                    goToStep(step);
+                }
+            });
+        });
     });
 
     // ── Render service cards ──
