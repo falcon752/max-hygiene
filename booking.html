@@ -638,12 +638,12 @@
                             <div class="form-group">
                                 <label for="ic-firstName">First Name *</label>
                                 <input type="text" id="ic-firstName" required>
-                                <div class="field-error" id="err-ic-firstName">Please enter your first name.</div>
+                                <div class="field-error" id="err-ic-firstName" placeholder="First Name">Please enter your first name.</div>
                             </div>
                             <div class="form-group">
                                 <label for="ic-lastName">Last Name *</label>
                                 <input type="text" id="ic-lastName" required>
-                                <div class="field-error" id="err-ic-lastName">Please enter your last name.</div>
+                                <div class="field-error" id="err-ic-lastName" placeholder="Last Name">Please enter your last name.</div>
                             </div>
                         </div>
                         <div class="form-grid-2">
@@ -721,6 +721,10 @@
                             <div class="hours-display" id="hoursDisplay">3</div>
                             <button class="hours-btn" onclick="changeHours(1)"><i class="fas fa-plus"></i></button>
                             <span class="hours-label">hrs &nbsp;×&nbsp; <strong id="rateLabel">£20/hr</strong></span>
+                        </div>
+                        <div class="form-group" style="margin-top: 1.5rem;">
+                            <label for="hourlyDesc" style="font-size: .82rem; font-weight: 600; color: #4a5568; margin-bottom: .35rem; display: block;">Describe what you want us to do *</label>
+                            <textarea id="hourlyDesc" placeholder="e.g. Focus on deep cleaning the kitchen and living room..." rows="3"></textarea>
                         </div>
                     </div>
 
@@ -1196,7 +1200,7 @@
     }
 
     function changeHours(delta) {
-        state.hours = Math.max(1, Math.min(24, state.hours + delta));
+        state.hours = Math.max(2, Math.min(24, state.hours + delta));
         document.getElementById('hoursDisplay').textContent = state.hours;
         calculatePrice();
         updatePricePanel();
@@ -1490,6 +1494,13 @@
     async function submitBooking() {
         if (!validateContactForm()) return;
 
+        const hourlyDescEl = document.getElementById('hourlyDesc');
+        const hourlyDescVal = hourlyDescEl ? hourlyDescEl.value.trim() : '';
+        const notesValue = document.getElementById('notes').value.trim();
+        const finalNotes = state.pricingType === 'hourly' && hourlyDescVal
+            ? (notesValue ? notesValue + '\n\nTask description: ' + hourlyDescVal : 'Task description: ' + hourlyDescVal)
+            : notesValue;
+
         // Collect contact data
         state.contact = {
             firstName:   document.getElementById('firstName').value.trim(),
@@ -1499,7 +1510,7 @@
             addressLine: document.getElementById('addressLine').value.trim(),
             city:        document.getElementById('city').value.trim(),
             postcode:    document.getElementById('postcode').value.trim(),
-            notes:       document.getElementById('notes').value.trim()
+            notes:       finalNotes
         };
 
         const btn = document.getElementById('submitBtn');
