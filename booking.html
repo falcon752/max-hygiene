@@ -718,13 +718,13 @@
                         <p style="font-size:.82rem;color:#718096;margin:.2rem 0 .6rem;">Estimated cleaning hours:</p>
                         <div class="hours-input-row">
                             <button class="hours-btn" onclick="changeHours(-1)"><i class="fas fa-minus"></i></button>
-                            <div class="hours-display" id="hoursDisplay">3</div>
+                            <div class="hours-display" id="hoursDisplay">0</div>
                             <button class="hours-btn" onclick="changeHours(1)"><i class="fas fa-plus"></i></button>
                             <span class="hours-label">hrs &nbsp;×&nbsp; <strong id="rateLabel">£20/hr</strong></span>
                         </div>
                         <div class="form-group" style="margin-top: 1.5rem;">
                             <label for="hourlyDesc" style="font-size: .82rem; font-weight: 600; color: #4a5568; margin-bottom: .35rem; display: block;">Describe what you want us to do *</label>
-                            <textarea id="hourlyDesc" placeholder="e.g. Focus on deep cleaning the kitchen and living room..." rows="3"></textarea>
+                            <textarea id="hourlyDesc" placeholder="e.g. Focus on deep cleaning the kitchen and living room..." rows="3" oninput="state.hourlyDesc = this.value; validateStep2Hourly(); saveState();"></textarea>
                         </div>
                     </div>
 
@@ -734,9 +734,10 @@
                         <div class="addon-grid" id="addonGrid"></div>
                     </div>
 
+                    <div class="step-validate-hint" id="hint2Hourly">Please select hours and describe what you want us to do.</div>
                     <div class="step-actions">
                         <button class="btn-back" onclick="goToStep(1)"><i class="fas fa-arrow-left"></i> Back</button>
-                        <button class="btn-continue" onclick="goToStep(3)">Continue <i class="fas fa-arrow-right"></i></button>
+                        <button class="btn-continue" id="btnContinueStep2" onclick="goToStep(3)">Continue <i class="fas fa-arrow-right"></i></button>
                     </div>
                 </div>
 
@@ -960,9 +961,9 @@
 
     // ── Pricing data ──
     const SERVICES = [
-        { id: 'residential-standard', name: 'Residential Standard Clean', icon: 'fas fa-home',         hourlyRate: 18, desc: 'Regular home cleaning' },
-        { id: 'residential-deep',     name: 'Residential Deep Clean',     icon: 'fas fa-broom',        hourlyRate: 22, desc: 'Intensive top-to-bottom clean' },
-        { id: 'commercial',           name: 'Commercial Cleaning',         icon: 'fas fa-building',     hourlyRate: 22, desc: 'Professional workspace cleaning' },
+        { id: 'residential-standard', name: 'Residential Standard Clean', icon: 'fas fa-home',         hourlyRate: 20.5, desc: 'Regular home cleaning' },
+        { id: 'residential-deep',     name: 'Residential Deep Clean',     icon: 'fas fa-broom',        hourlyRate: 25, desc: 'Intensive top-to-bottom clean' },
+        { id: 'commercial',           name: 'Commercial Cleaning',         icon: 'fas fa-building',     hourlyRate: 25, desc: 'Professional workspace cleaning' },
         { id: 'shortlet',             name: 'Short-let / Airbnb',          icon: 'fas fa-key',          hourlyRate: 20, desc: 'Property ready for next guests' },
         { id: 'endoftenancy',         name: 'End of Tenancy Cleaning',     icon: 'fas fa-truck-moving', hourlyRate: 25, desc: 'Full property ready for handover' }
     ];
@@ -1006,7 +1007,8 @@
         propertyType: 'house',
         pricingType: 'flat',
         flatItems: {},   // { id: quantity }
-        hours: 3,
+        hours: 0,
+        hourlyDesc: '',
         addons: [],
         frequency: 'oneTime',
         calYear: null,
@@ -1018,18 +1020,68 @@
         prices: { base: 0, addons: 0, discount: 0, total: 0, isQuote: false }
     };
 
+    // ── State Persistence ──
+    function saveState() {
+        sessionStorage.setItem('bookingState', JSON.stringify(state));
+    }
+
     // ── Init ──
     document.addEventListener('DOMContentLoaded', () => {
         const now = new Date();
-        state.calYear  = now.getFullYear();
-        state.calMonth = now.getMonth();
+        try {
+            const saved = sessionStorage.getItem('bookingState');
+            if (saved) {
+                Object.assign(state, JSON.parse(saved));
+            }
+        } catch(e) {}
+
+        if (state.calYear === null) {
+            state.calYear  = now.getFullYear();
+            state.calMonth = now.getMonth();
+        }
+        
         renderServiceGrid();
         renderFlatItemsGrid();
         renderAddonGrid();
         renderFrequencyGrid();
         renderCalendar();
+        if (state.date) {
+            renderTimeSlots(state.date);
+            document.getElementById('timeSlotsWrap').style.display = 'block';
+        }
+
         document.getElementById('current-year').textContent = now.getFullYear();
         initPillListeners('propertyTypePills', 'propertyType');
+
+        // Restore UI toggles based on state
+        document.querySelectorAll('#propertyTypePills .pill').forEach(p => {
+            p.classList.toggle('active', p.dataset.val === state.propertyType);
+        });
+        document.getElementById('btnFlat').classList.toggle('active', state.pricingType === 'flat');
+        document.getElementById('btnHourly').classList.toggle('active', state.pricingType === 'hourly');
+        document.getElementById('hourlyControls').style.display   = state.pricingType === 'hourly' ? 'block' : 'none';
+        document.getElementById('flatItemsSection').style.display = state.pricingType === 'flat'   ? 'block' : 'none';
+        document.getElementById('extrasSection').style.display    = state.pricingType === 'flat'   ? 'block' : 'none';
+        document.getElementById('hoursDisplay').textContent = state.hours;
+        if (state.service) {
+            document.getElementById('btnFlat').style.display = state.service === 'commercial' ? 'none' : '';
+            updateRateLabel();
+        }
+        if (state.contact) {
+            ['firstName', 'lastName', 'email', 'phone'].forEach(k => {
+                const el1 = document.getElementById(k);
+                const el2 = document.getElementById('ic-' + k);
+                if (el1 && state.contact[k]) el1.value = state.contact[k];
+                if (el2 && state.contact[k]) el2.value = state.contact[k];
+            });
+        }
+        if (state.hourlyDesc) {
+            document.getElementById('hourlyDesc').value = state.hourlyDesc;
+        }
+
+        const savedStep = state.step;
+        state.step = 0;
+        goToStep(savedStep, true);
 
         // Make progress steps clickable
         document.querySelectorAll('.progress-step').forEach(el => {
@@ -1040,6 +1092,8 @@
                 }
             });
         });
+        
+        validateStep2Hourly();
     });
 
     // ── Render service cards ──
@@ -1058,6 +1112,14 @@
     function selectService(id) {
         state.service = id;
         renderServiceGrid();
+        
+        if (id === 'commercial') {
+            setPricingType('hourly');
+            document.getElementById('btnFlat').style.display = 'none';
+        } else {
+            document.getElementById('btnFlat').style.display = '';
+        }
+
         updateRateLabel();
         calculatePrice();
         updatePricePanel();
@@ -1197,13 +1259,21 @@
         }
         calculatePrice();
         updatePricePanel();
+        validateStep2Hourly();
     }
 
     function changeHours(delta) {
-        state.hours = Math.max(2, Math.min(24, state.hours + delta));
+        if (state.hours === 0 && delta > 0) {
+            state.hours = 2;
+        } else if (state.hours === 2 && delta < 0) {
+            state.hours = 0;
+        } else if (state.hours > 0) {
+            state.hours = Math.max(2, Math.min(24, state.hours + delta));
+        }
         document.getElementById('hoursDisplay').textContent = state.hours;
         calculatePrice();
         updatePricePanel();
+        validateStep2Hourly();
     }
 
     function updateRateLabel() {
@@ -1232,7 +1302,7 @@
         let base = 0;
 
         if (state.pricingType === 'flat') {
-            base = Object.entries(state.flatItems).reduce((sum, [id, qty]) => {
+            base = svc.hourlyRate + Object.entries(state.flatItems).reduce((sum, [id, qty]) => {
                 const item = FLAT_ITEMS.find(x => x.id === id);
                 return sum + (item ? item.price * qty : 0);
             }, 0);
@@ -1267,9 +1337,9 @@
         const freq = FREQUENCIES.find(f => f.id === state.frequency);
 
         let html = '';
-        html += `<div class="panel-row"><span class="label">${svc.name}</span><span class="value"></span></div>`;
 
         if (state.pricingType === 'flat') {
+            html += `<div class="panel-row"><span class="label">${svc.name}</span><span class="value">£${svc.hourlyRate.toFixed(2)}</span></div>`;
             const entries = Object.entries(state.flatItems);
             if (entries.length === 0) {
                 html += `<div class="panel-row"><span class="label" style="color:#718096;font-style:italic;">Select rooms &amp; tasks above</span><span class="value"></span></div>`;
@@ -1280,7 +1350,12 @@
                 });
             }
         } else {
-            html += `<div class="panel-row"><span class="label">${state.hours} hrs × £${svc.hourlyRate}</span><span class="value">£${p.base.toFixed(2)}</span></div>`;
+            html += `<div class="panel-row"><span class="label">${svc.name}</span><span class="value">£${svc.hourlyRate.toFixed(2)}/hr</span></div>`;
+            if (state.hours > 0) {
+                html += `<div class="panel-row"><span class="label">${state.hours} hrs × £${svc.hourlyRate}</span><span class="value">£${p.base.toFixed(2)}</span></div>`;
+            } else {
+                html += `<div class="panel-row"><span class="label" style="color:#718096;font-style:italic;">Select hours</span><span class="value"></span></div>`;
+            }
         }
 
         if (p.discount > 0) {
@@ -1308,6 +1383,7 @@
         }
 
         panel.innerHTML = html;
+        saveState();
     }
 
     // ── Calendar ──
@@ -1402,11 +1478,12 @@
                 // date scrolled out of view — keep selection
             }
         }
+        saveState();
     }
 
     // ── Step navigation ──
-    function goToStep(target) {
-        if (target > state.step) {
+    function goToStep(target, force = false) {
+        if (target > state.step && !force) {
             if (!validateStep(state.step)) return;
         }
         document.getElementById(`step-${state.step}`).classList.remove('active');
@@ -1433,7 +1510,7 @@
         }
 
         updatePricePanel();
-        window.scrollTo({ top: 0, behavior: 'smooth' });
+        if (!force) window.scrollTo({ top: 0, behavior: 'smooth' });
     }
 
     // ── Initial contact capture (Step 0) ──
@@ -1474,11 +1551,41 @@
         goToStep(1);
     }
 
+    function validateStep2Hourly() {
+        if (state.pricingType !== 'hourly') {
+            document.getElementById('btnContinueStep2').disabled = false;
+            document.getElementById('hint2Hourly').classList.remove('show');
+            return;
+        }
+        
+        const descVal = document.getElementById('hourlyDesc').value.trim();
+        const isValid = state.hours > 0 && descVal.length > 0;
+        
+        document.getElementById('btnContinueStep2').disabled = !isValid;
+        if (!isValid) {
+            document.getElementById('hint2Hourly').classList.add('show');
+        } else {
+            document.getElementById('hint2Hourly').classList.remove('show');
+        }
+    }
+
     function validateStep(step) {
         if (step === 1) {
             if (!state.service) {
                 document.getElementById('hint1').classList.add('show');
                 return false;
+            }
+        }
+        if (step === 2) {
+            if (state.pricingType === 'hourly') {
+                if (state.hours === 0) {
+                    showToast('Please specify the estimated cleaning hours.', 'error');
+                    return false;
+                }
+                if (!document.getElementById('hourlyDesc').value.trim()) {
+                    showToast('Please describe what you want us to do.', 'error');
+                    return false;
+                }
             }
         }
         if (step === 3) {
