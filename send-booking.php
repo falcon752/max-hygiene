@@ -223,7 +223,7 @@ function buildAdminEmail(array $d): string
 <table width="600" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.08);">
 
   <tr><td style="background:linear-gradient(135deg,#3bb0bd,#2d3748);padding:30px 40px;text-align:center;">
-    <h1 style="color:#fff;margin:0;font-size:22px;font-weight:700;">&#128203; New Booking Request</h1>
+    <h1 style="color:#fff;margin:0;font-size:22px;font-weight:700;">New Booking Request</h1>
     <p style="color:rgba(255,255,255,.8);margin:8px 0 0;font-size:14px;">Max-Hygiene Professional Cleaning</p>
   </td></tr>
 
@@ -234,7 +234,7 @@ function buildAdminEmail(array $d): string
 
   <tr><td style="padding:30px 40px;">
 
-    <h2 style="color:#2d3748;font-size:15px;margin:0 0 14px;border-bottom:2px solid #3bb0bd;padding-bottom:8px;">&#128100; Client Details</h2>
+    <h2 style="color:#2d3748;font-size:15px;margin:0 0 14px;border-bottom:2px solid #3bb0bd;padding-bottom:8px;">Client Details</h2>
     <table width="100%" cellpadding="7" cellspacing="0">
       <tr>
         <td style="color:#718096;font-size:13px;width:38%;">Full Name</td>
@@ -254,7 +254,7 @@ function buildAdminEmail(array $d): string
       </tr>
     </table>
 
-    <h2 style="color:#2d3748;font-size:15px;margin:22px 0 14px;border-bottom:2px solid #3bb0bd;padding-bottom:8px;">&#129529; Service Details</h2>
+    <h2 style="color:#2d3748;font-size:15px;margin:22px 0 14px;border-bottom:2px solid #3bb0bd;padding-bottom:8px;">Service Details</h2>
     <table width="100%" cellpadding="7" cellspacing="0">
       <tr>
         <td style="color:#718096;font-size:13px;width:38%;">Service Type</td>
@@ -278,7 +278,7 @@ function buildAdminEmail(array $d): string
       </tr>
     </table>
 
-    <h2 style="color:#2d3748;font-size:15px;margin:22px 0 14px;border-bottom:2px solid #3bb0bd;padding-bottom:8px;">&#128197; Appointment</h2>
+    <h2 style="color:#2d3748;font-size:15px;margin:22px 0 14px;border-bottom:2px solid #3bb0bd;padding-bottom:8px;">Appointment</h2>
     <table width="100%" cellpadding="7" cellspacing="0">
       <tr>
         <td style="color:#718096;font-size:13px;width:38%;">Date</td>
@@ -338,7 +338,7 @@ function buildClientEmail(array $d): string
 <table width="600" cellpadding="0" cellspacing="0" style="background:#fff;border-radius:12px;overflow:hidden;box-shadow:0 4px 20px rgba(0,0,0,.08);">
 
   <tr><td style="background:linear-gradient(135deg,#3bb0bd,#00d97e);padding:40px;text-align:center;">
-    <div style="width:68px;height:68px;background:rgba(255,255,255,.25);border-radius:50%;margin:0 auto 16px;line-height:68px;font-size:30px;">&#10003;</div>
+    <div style="width:68px;height:68px;background:rgba(255,255,255,.25);border-radius:50%;margin:0 auto 16px;line-height:68px;font-size:30px;">✓</div>
     <h1 style="color:#fff;margin:0;font-size:26px;font-weight:700;">Booking Received!</h1>
     <p style="color:rgba(255,255,255,.85);margin:10px 0 0;font-size:14px;">We&rsquo;ll be in touch shortly to confirm your appointment.</p>
   </td></tr>
