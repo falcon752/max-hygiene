@@ -1,0 +1,187 @@
+.calHeader {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  margin-bottom: 20px;
+}
+
+.monthTitle {
+  font-size: 1.1rem;
+  font-weight: 600;
+  color: var(--dark);
+}
+
+.calGrid {
+  display: grid;
+  grid-template-columns: repeat(7, 1fr);
+  gap: 4px;
+}
+
+.dayHeader {
+  text-align: center;
+  font-size: 0.75rem;
+  font-weight: 600;
+  color: var(--text-light);
+  padding: 6px 0;
+  text-transform: uppercase;
+}
+
+.emptyCell {
+  background: transparent;
+}
+
+.dayCell {
+  aspect-ratio: 1;
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  cursor: pointer;
+  transition: all 0.15s;
+  padding: 4px;
+  gap: 2px;
+}
+
+.dayCell:hover:not(:disabled) {
+  border-color: var(--primary);
+  background: var(--primary-light);
+}
+
+.dayCell:disabled {
+  background: var(--light-bg);
+  cursor: not-allowed;
+  opacity: 0.5;
+}
+
+.dayNum {
+  font-size: 0.9rem;
+  font-weight: 500;
+  color: var(--dark);
+}
+
+.dayMeta {
+  font-size: 0.65rem;
+  color: var(--text-light);
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+  max-width: 100%;
+  padding: 0 2px;
+}
+
+.today {
+  border-color: var(--primary) !important;
+  background: var(--primary-light) !important;
+}
+
+.today .dayNum {
+  color: var(--primary);
+  font-weight: 700;
+}
+
+.past {
+  background: var(--light-bg) !important;
+  border-color: transparent !important;
+}
+
+.past .dayNum {
+  color: var(--text-light);
+}
+
+.unavailable {
+  background: #fee2e2 !important;
+  border-color: #fca5a5 !important;
+}
+
+.unavailable .dayNum {
+  color: #dc2626;
+}
+
+.unavailable .dayMeta {
+  color: #dc2626;
+}
+
+.hasSlots {
+  background: #d1fae5 !important;
+  border-color: #6ee7b7 !important;
+}
+
+.hasSlots .dayMeta {
+  color: #047857;
+}
+
+.legend {
+  display: flex;
+  gap: 20px;
+  margin-top: 16px;
+  padding-top: 14px;
+  border-top: 1px solid var(--border);
+  flex-wrap: wrap;
+}
+
+.legendItem {
+  display: flex;
+  align-items: center;
+  gap: 6px;
+  font-size: 0.8rem;
+  color: var(--text-light);
+}
+
+.dot {
+  width: 12px;
+  height: 12px;
+  border-radius: 50%;
+  flex-shrink: 0;
+}
+
+.dotAvail { background: #6ee7b7; border: 1.5px solid #6ee7b7; }
+.dotUnavail { background: #fca5a5; border: 1.5px solid #fca5a5; }
+.dotNone { background: var(--border); border: 1.5px solid var(--border); }
+
+/* Slots */
+.slotList {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 6px;
+}
+
+.slotChip {
+  background: var(--primary-light);
+  color: var(--primary);
+  padding: 3px 10px;
+  border-radius: 20px;
+  font-size: 0.78rem;
+  font-weight: 500;
+}
+
+.slotsGrid {
+  display: grid;
+  grid-template-columns: repeat(4, 1fr);
+  gap: 8px;
+}
+
+.slotBtn {
+  padding: 10px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  font-size: 0.85rem;
+  font-weight: 500;
+  color: var(--text);
+  transition: all 0.15s;
+  cursor: pointer;
+}
+
+.slotBtn:hover {
+  border-color: var(--primary);
+  color: var(--primary);
+}
+
+.slotActive {
+  background: var(--primary) !important;
+  border-color: var(--primary) !important;
+  color: white !important;
+}

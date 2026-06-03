@@ -956,11 +956,13 @@
     <!-- Toast -->
     <div class="toast" id="toast"></div>
 
-    <!-- Emails are sent server-side via send-booking.php using Gmail SMTP. -->
+    <!-- Bookings are stored in MongoDB and emails sent via the Express API on port 4000. -->
     <script>
 
-    // ── Pricing data ──
-    const SERVICES = [
+    const API_BASE = 'http://localhost:4000/api';
+
+    // ── Pricing data (loaded from API, fallback to defaults) ──
+    let SERVICES = [
         { id: 'residential-standard', name: 'Residential Standard Clean', icon: 'fas fa-home',         hourlyRate: 20.5, desc: 'Regular home cleaning' },
         { id: 'residential-deep',     name: 'Residential Deep Clean',     icon: 'fas fa-broom',        hourlyRate: 25, desc: 'Intensive top-to-bottom clean' },
         { id: 'commercial',           name: 'Commercial Cleaning',         icon: 'fas fa-building',     hourlyRate: 25, desc: 'Professional workspace cleaning' },
@@ -968,8 +970,7 @@
         { id: 'endoftenancy',         name: 'End of Tenancy Cleaning',     icon: 'fas fa-truck-moving', hourlyRate: 25, desc: 'Full property ready for handover' }
     ];
 
-    // Flat-rate items: rooms + specific tasks (priced per item selected)
-    const FLAT_ITEMS = [
+    let FLAT_ITEMS = [
         { id: 'bathroom',     name: 'Bathroom',             price: 36, icon: 'fas fa-bath' },
         { id: 'bedroom',      name: 'Bedroom',              price: 24, icon: 'fas fa-bed' },
         { id: 'livingroom',   name: 'Living Room',          price: 36, icon: 'fas fa-couch' },
@@ -983,13 +984,16 @@
         { id: 'fridge',       name: 'Inside fridge cleaning', price: 12, icon: 'fas fa-snowflake' }
     ];
 
-    const ADDONS = [
+    let ADDONS = [
         { id: 'products',  name: 'Cleaning Products',        price:  5, icon: 'fas fa-flask' },
         { id: 'pet',       name: 'Home with Pets',           price:  6, icon: 'fas fa-paw' },
         { id: 'vacuum',    name: 'Vacuum Provided',          price:  5, icon: 'fas fa-broom' },
         { id: 'bedchange', name: 'Bed making',               price:  6, icon: 'fas fa-bed' },
         { id: 'ironing',   name: 'Ironing (per hr)',         price: 22, icon: 'fas fa-tshirt' }
     ];
+
+    // API availability cache: { 'YYYY-MM-DD': { available: bool, slots: [] } }
+    let _availabilityCache = {};
 
     const FREQUENCIES = [
         { id: 'oneTime',   label: 'One-Time',       discount: 0,    badge: null,       desc: 'Single visit' },
@@ -1025,8 +1029,67 @@
         sessionStorage.setItem('bookingState', JSON.stringify(state));
     }
 
+    // ── Load dynamic data from API ──
+    async function loadAPIData() {
+        try {
+            const res = await fetch(`${API_BASE}/services`);
+            if (res.ok) {
+                const data = await res.json();
+                if (data.data && data.data.length > 0) {
+                    SERVICES = data.data.map(s => ({
+                        id: s._id,
+                        name: s.name,
+                        icon: s.icon,
+                        hourlyRate: s.hourlyRate || 0,
+                        desc: s.description || '',
+                        pricingType: s.pricingType,
+                        flatRateMode: s.flatRateMode,
+                        rooms: s.rooms || [],
+                        extras: s.extras || []
+                    }));
+                    // Merge first active service's rooms/extras as flat items and addons
+                    const flatSvc = SERVICES.find(s => s.pricingType === 'flat' && s.flatRateMode === 'rooms');
+                    if (flatSvc && flatSvc.rooms.length > 0) {
+                        FLAT_ITEMS = flatSvc.rooms.map(r => ({ id: r.id, name: r.name, price: r.price, icon: r.icon || 'fas fa-home' }));
+                    }
+                    if (flatSvc && flatSvc.extras.length > 0) {
+                        ADDONS = flatSvc.extras.map(e => ({ id: e.id, name: e.name, price: e.price, icon: e.icon || 'fas fa-plus' }));
+                    }
+                }
+            }
+        } catch(e) { /* use defaults on error */ }
+
+        // Load availability for the current month
+        try {
+            const now = new Date();
+            const from = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-01`;
+            const to   = `${now.getFullYear()}-${String(now.getMonth()+1).padStart(2,'0')}-31`;
+            const res2 = await fetch(`${API_BASE}/availability?from=${from}&to=${to}`);
+            if (res2.ok) {
+                const avData = await res2.json();
+                if (avData.data) {
+                    avData.data.forEach(a => { _availabilityCache[a.date] = { available: a.available, slots: a.slots }; });
+                }
+            }
+        } catch(e) { /* continue with simulated */ }
+    }
+
+    async function loadAvailabilityForMonth(year, month) {
+        try {
+            const from = `${year}-${String(month+1).padStart(2,'0')}-01`;
+            const to   = `${year}-${String(month+1).padStart(2,'0')}-31`;
+            const res = await fetch(`${API_BASE}/availability?from=${from}&to=${to}`);
+            if (res.ok) {
+                const avData = await res.json();
+                if (avData.data) {
+                    avData.data.forEach(a => { _availabilityCache[a.date] = { available: a.available, slots: a.slots }; });
+                }
+            }
+        } catch(e) { /* silent */ }
+    }
+
     // ── Init ──
-    document.addEventListener('DOMContentLoaded', () => {
+    document.addEventListener('DOMContentLoaded', async () => {
         const now = new Date();
         try {
             const saved = sessionStorage.getItem('bookingState');
@@ -1039,7 +1102,9 @@
             state.calYear  = now.getFullYear();
             state.calMonth = now.getMonth();
         }
-        
+
+        await loadAPIData();
+
         renderServiceGrid();
         renderFlatItemsGrid();
         renderAddonGrid();
@@ -1428,12 +1493,15 @@
     }
 
     function getSimulatedBookedDays(year, month) {
-        const seed = year * 12 + month;
-        return [
-            ((seed * 7 + 3) % 28) + 1,
-            ((seed * 13 + 9) % 28) + 1,
-            ((seed * 5 + 17) % 28) + 1
-        ];
+        // Return days where availability is explicitly set to false in API data
+        const unavailable = [];
+        for (const [dateStr, entry] of Object.entries(_availabilityCache)) {
+            const d = new Date(dateStr);
+            if (d.getFullYear() === year && d.getMonth() === month && !entry.available) {
+                unavailable.push(d.getDate());
+            }
+        }
+        return unavailable;
     }
 
     function selectDate(dateStr) {
@@ -1446,12 +1514,12 @@
     }
 
     function renderTimeSlots(dateStr) {
-        const d = new Date(dateStr);
-        const seed = d.getDate() + d.getMonth() * 31;
-        const unavailableIdxs = new Set([seed % 8, (seed + 3) % 8, (seed * 2 + 5) % 8]);
+        // Use API availability if available, else show all slots
+        const entry = _availabilityCache[dateStr];
+        const availableSlots = entry ? entry.slots : TIME_SLOTS_ALL;
 
-        document.getElementById('timeSlotGrid').innerHTML = TIME_SLOTS_ALL.map((slot, i) => {
-            const unavail   = unavailableIdxs.has(i);
+        document.getElementById('timeSlotGrid').innerHTML = TIME_SLOTS_ALL.map(slot => {
+            const unavail   = !availableSlots.includes(slot);
             const selected  = state.timeSlot === slot;
             let cls = 'time-slot';
             if (selected)   cls += ' selected';
@@ -1471,6 +1539,7 @@
         state.calMonth += delta;
         if (state.calMonth > 11) { state.calMonth = 0; state.calYear++; }
         if (state.calMonth < 0)  { state.calMonth = 11; state.calYear--; }
+        loadAvailabilityForMonth(state.calYear, state.calMonth).then(() => renderCalendar());
         renderCalendar();
         if (state.date) {
             const [y, m] = state.date.split('-').map(Number);
@@ -1534,19 +1603,15 @@
         if (!valid) return;
 
         // Fire-and-forget lead notification — don't block the customer
-        if (location.protocol !== 'file:') {
-            fetch('send-booking.php', {
-                method:  'POST',
-                headers: { 'Content-Type': 'application/json' },
-                body:    JSON.stringify({
-                    leadData: {
-                        name:  `${state.contact.firstName} ${state.contact.lastName}`,
-                        email: state.contact.email,
-                        phone: state.contact.phone
-                    }
-                })
-            }).catch(() => {}); // silently ignore failures
-        }
+        fetch(`${API_BASE}/bookings/lead`, {
+            method:  'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body:    JSON.stringify({
+                name:  `${state.contact.firstName} ${state.contact.lastName}`,
+                email: state.contact.email,
+                phone: state.contact.phone
+            })
+        }).catch(() => {});
 
         goToStep(1);
     }
@@ -1636,77 +1701,77 @@
             : 'None';
         const priceStr  = `£${state.prices.total.toFixed(2)}${state.pricingType === 'hourly' ? ' (estimated)' : ''}`;
 
-        const adminParams = {
-            from_name:         `${state.contact.firstName} ${state.contact.lastName}`,
-            from_email:        state.contact.email,
-            phone:             state.contact.phone,
-            service_name:      svc?.name || state.service,
-            service_address:   state.contact.addressLine,
-            city:              state.contact.city,
-            postcode:          state.contact.postcode,
-            appointment_date:  formatDisplayDate(state.date),
-            appointment_time:  formatTime(state.timeSlot),
-            frequency:         freq?.label || state.frequency,
-            pricing_type:      state.pricingType === 'flat' ? 'Flat Rate' : 'Hourly Rate',
-            addons_list:       addonsStr,
-            base_price:        `£${state.prices.base.toFixed(2)}`,
-            addons_total:      `£${state.prices.addons.toFixed(2)}`,
-            discount_amount:   `£${state.prices.discount.toFixed(2)}`,
-            total_price:       priceStr,
-            special_notes:     state.contact.notes || 'None',
-            booking_ref:       ref,
-            property_type:     state.propertyType,
-            rooms_selected:    state.pricingType === 'flat'
-                ? (Object.entries(state.flatItems).map(([id, qty]) => {
+        // Build MongoDB-compatible booking payload
+        const freqMap = { oneTime: 'once', weekly: 'weekly', biweekly: 'biweekly', monthly: 'monthly' };
+        const bookingPayload = {
+            customer: {
+                firstName: state.contact.firstName,
+                lastName:  state.contact.lastName,
+                email:     state.contact.email,
+                phone:     state.contact.phone
+            },
+            address: {
+                line1:    state.contact.addressLine,
+                city:     state.contact.city,
+                postcode: state.contact.postcode
+            },
+            service: {
+                id:   state.service,
+                name: svc?.name || state.service
+            },
+            propertyType:      state.propertyType,
+            pricingType:       state.pricingType,
+            rooms: state.pricingType === 'flat'
+                ? Object.entries(state.flatItems).map(([id, qty]) => {
                     const x = FLAT_ITEMS.find(i => i.id === id);
-                    return x ? `${x.name} ×${qty} (£${(x.price * qty).toFixed(2)})` : '';
-                  }).filter(Boolean).join(', ') || 'None')
-                : 'N/A (hourly)'
+                    return x ? { id, name: x.name, qty: Number(qty), price: x.price } : null;
+                  }).filter(Boolean)
+                : [],
+            extras: state.addons.map(id => {
+                const a = ADDONS.find(x => x.id === id);
+                return a ? { id, name: a.name, price: a.price } : null;
+            }).filter(Boolean),
+            hours:             state.pricingType === 'hourly' ? state.hours : 0,
+            hourlyDescription: hourlyDescVal,
+            frequency:         freqMap[state.frequency] || 'once',
+            date:              state.date,
+            timeSlot:          state.timeSlot,
+            notes:             finalNotes,
+            basePrice:         state.prices.base,
+            discount:          state.prices.discount,
+            extrasTotal:       state.prices.addons,
+            totalPrice:        state.prices.total
         };
 
-        const clientParams = {
-            to_name:           state.contact.firstName,
-            to_email:          state.contact.email,
-            service_name:      svc?.name || state.service,
-            appointment_date:  formatDisplayDate(state.date),
-            appointment_time:  formatTime(state.timeSlot),
-            booking_ref:       ref,
-            total_price:       priceStr,
-            pricing_type:      state.pricingType === 'flat' ? 'Flat Rate' : 'Hourly Rate',
-            notes:             state.contact.notes || 'No special instructions'
-        };
+        let bookingSaved = false;
+        let savedRef = ref;
 
-        let emailSent = true;
-        const isLocal = location.protocol === 'file:';
-
-        if (!isLocal) {
-            try {
-                const resp = await fetch('send-booking.php', {
-                    method:  'POST',
-                    headers: { 'Content-Type': 'application/json' },
-                    body:    JSON.stringify({ adminData: adminParams, clientData: clientParams })
-                });
-                const result = await resp.json();
-                if (!result.success) {
-                    emailSent = false;
-                    console.warn('Mailer error:', result.error);
-                }
-            } catch (err) {
-                console.warn('Fetch error:', err);
-                emailSent = false;
+        try {
+            const resp = await fetch(`${API_BASE}/bookings`, {
+                method:  'POST',
+                headers: { 'Content-Type': 'application/json' },
+                body:    JSON.stringify(bookingPayload)
+            });
+            const result = await resp.json();
+            if (result.success) {
+                bookingSaved = true;
+                savedRef = result.data.ref;
+                state.bookingRef = savedRef;
+            } else {
+                console.warn('Booking API error:', result.error);
             }
+        } catch (err) {
+            console.warn('Booking submit error:', err);
         }
 
         btn.classList.remove('loading');
         btn.disabled = false;
 
-        if (isLocal) {
-            showToast('Demo mode — open via a PHP server for real emails.', 'info');
-        } else if (!emailSent) {
-            showToast('Could not send confirmation email. Please call +44 7743173136 to confirm.', 'error');
+        if (!bookingSaved) {
+            showToast('Booking saved locally — check your email or call +44 7743173136 to confirm.', 'error');
         }
 
-        renderQuoteSummary(ref);
+        renderQuoteSummary(savedRef);
         goToStep(5);
     }
 

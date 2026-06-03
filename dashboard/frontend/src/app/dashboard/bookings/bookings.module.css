@@ -1,0 +1,142 @@
+.toolbar {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 20px;
+  flex-wrap: wrap;
+}
+
+.searchWrap {
+  position: relative;
+  flex: 1;
+  min-width: 220px;
+}
+
+.searchWrap i {
+  position: absolute;
+  left: 12px;
+  top: 50%;
+  transform: translateY(-50%);
+  color: var(--text-light);
+  pointer-events: none;
+}
+
+.searchWrap .form-control {
+  padding-left: 36px;
+}
+
+.loadingWrap {
+  display: flex;
+  justify-content: center;
+  padding: 60px;
+}
+
+.ref {
+  font-family: monospace;
+  font-weight: 600;
+  color: var(--primary);
+  font-size: 0.82rem;
+}
+
+.sub {
+  font-size: 0.78rem;
+  color: var(--text-light);
+  margin-top: 2px;
+}
+
+.statusSelect {
+  border: none;
+  cursor: pointer;
+  font-size: 0.75rem;
+  font-weight: 600;
+  padding: 4px 10px;
+  border-radius: 20px;
+}
+
+.actions {
+  display: flex;
+  gap: 4px;
+}
+
+.pagination {
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  gap: 16px;
+  margin-top: 20px;
+}
+
+.pageInfo {
+  font-size: 0.875rem;
+  color: var(--text-light);
+}
+
+/* Detail Modal */
+.detail {}
+
+.detailGrid {
+  display: grid;
+  grid-template-columns: 1fr 1fr;
+  gap: 20px;
+  margin-bottom: 20px;
+}
+
+@media (max-width: 600px) {
+  .detailGrid { grid-template-columns: 1fr; }
+}
+
+.detailSection {
+  margin-bottom: 20px;
+}
+
+.detailSection h3 {
+  font-size: 0.8rem;
+  font-weight: 600;
+  text-transform: uppercase;
+  letter-spacing: 0.05em;
+  color: var(--text-light);
+  margin-bottom: 10px;
+}
+
+.detailSection p {
+  font-size: 0.88rem;
+  color: var(--text);
+  line-height: 1.6;
+}
+
+.roomsList {
+  display: flex;
+  flex-direction: column;
+  gap: 6px;
+}
+
+.roomItem {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.87rem;
+  padding: 8px 12px;
+  background: var(--light-bg);
+  border-radius: var(--radius-sm);
+}
+
+.priceBreakdown {
+  border-top: 2px solid var(--border);
+  padding-top: 16px;
+  margin-top: 8px;
+}
+
+.priceRow {
+  display: flex;
+  justify-content: space-between;
+  font-size: 0.88rem;
+  padding: 4px 0;
+  color: var(--text);
+}
+
+.total {
+  font-size: 1.1rem;
+  font-weight: 700;
+  color: var(--dark);
+  padding-top: 10px;
+  margin-top: 6px;
+  border-top: 1px solid var(--border);
+}
