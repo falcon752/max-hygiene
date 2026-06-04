@@ -25,8 +25,7 @@ export default function Sidebar() {
   return (
     <aside className={styles.sidebar}>
       <div className={styles.logo}>
-        <i className="fas fa-broom" />
-        <span>Max-Hygiene</span>
+        <img src="/images/logo2.jpeg" alt="Max-Hygiene Logo" style={{ height: '40px', width: 'auto' }} />
       </div>
 
       <nav className={styles.nav}>

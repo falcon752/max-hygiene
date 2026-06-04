@@ -32,8 +32,7 @@ export default function LoginPage() {
     <div className={styles.page}>
       <div className={styles.card}>
         <div className={styles.logo}>
-          <i className="fas fa-broom" />
-          <span>Max-Hygiene</span>
+          <img src="/images/logo2.jpeg" alt="Max-Hygiene Logo" style={{ height: '60px', width: 'auto' }} />
         </div>
         <h1 className={styles.title}>Admin Login</h1>
         <p className={styles.subtitle}>Sign in to manage your bookings</p>
