@@ -10,6 +10,7 @@ import serviceRoutes from './routes/services';
 import bookingRoutes from './routes/bookings';
 import customerRoutes from './routes/customers';
 import availabilityRoutes from './routes/availability';
+import contactRoutes from './routes/contact';
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -27,6 +28,7 @@ app.use('/api/services', serviceRoutes);
 app.use('/api/bookings', bookingRoutes);
 app.use('/api/customers', customerRoutes);
 app.use('/api/availability', availabilityRoutes);
+app.use('/api/contact', contactRoutes);
 
 app.get('/api/health', (_req, res) => res.json({ ok: true }));
 
