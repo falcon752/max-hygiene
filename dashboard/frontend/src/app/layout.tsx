@@ -2,8 +2,15 @@ import type { Metadata } from 'next';
 import './globals.css';
 
 export const metadata: Metadata = {
-  title: 'Max-Hygiene Admin',
-  description: 'Admin dashboard for Max-Hygiene Cleaning Services',
+  title: {
+    template: '%s | Max-Hygiene',
+    default: 'Max-Hygiene',
+  },
+  description: 'Professional cleaning services in Glasgow and surroundings.',
+  icons: {
+    icon: '/images/logo1.png',
+    apple: '/images/logo1.png',
+  },
 };
 
 export default function RootLayout({ children }: { children: React.ReactNode }) {

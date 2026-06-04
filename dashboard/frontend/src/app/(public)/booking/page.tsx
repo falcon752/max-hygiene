@@ -445,7 +445,7 @@ export default function BookingPage() {
                 <tr style={{borderTop:'1px solid #e2e8f0'}}><td style={{padding:'8px 0',fontWeight:700}}>Estimated Total</td><td style={{textAlign:'right',fontWeight:700,color:'#3bb0bd',fontSize:'1.1rem'}}>£{prices.total.toFixed(2)}</td></tr>
               </tbody></table>
             </div>}
-            <div className="confirm-note"><i className="fas fa-info-circle"/><span><strong>No payment required today.</strong> Payment will be arranged on the day of service.</span></div>
+            {/* <div className="confirm-note"><i className="fas fa-info-circle"/><span><strong>No payment required today.</strong> Payment will be arranged on the day of service.</span></div> */}
             <Link href="/" className="btn-home"><i className="fas fa-home"/> Back to Home</Link>
           </div>
         </div>

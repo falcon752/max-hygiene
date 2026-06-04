@@ -51,7 +51,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
       <header className="mobile-header">
         <div className="mobile-header-container">
           <div className="mobile-logo">
-            <img src="/images/logo2.jpeg" alt="Max-Hygiene Logo" />
+            <img src="/images/logo1.png" alt="Max-Hygiene Logo" />
           </div>
           <button className="mobile-menu-toggle" onClick={() => setOpen(o => !o)}>
             <i className="fas fa-bars" />
@@ -62,7 +62,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
       {/* Sidebar */}
       <nav ref={sidebarRef} className={`sidebar${open ? ' active' : ''}`}>
         <div className="logo">
-          <img src="/images/logo2.jpeg" alt="Max-Hygiene Logo" className="logo-img" />
+          <img src="/images/logo1.png" alt="Max-Hygiene Logo" className="logo-img" />
         </div>
         <ul className="nav-links">
           {NAV_LINKS.map(({ href, icon, label }) => {
