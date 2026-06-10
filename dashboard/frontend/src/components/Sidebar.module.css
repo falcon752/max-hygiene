@@ -16,7 +16,7 @@
 /* ── Sidebar ── */
 .sidebar {
   width: var(--sidebar-width);
-  min-height: 100vh;
+  height: 100dvh;
   background: var(--dark);
   display: flex;
   flex-direction: column;

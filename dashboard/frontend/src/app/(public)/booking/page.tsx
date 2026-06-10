@@ -25,7 +25,7 @@ function fmtDate(dateStr: string): string {
   if (!dateStr) return '';
   return new Date(dateStr + 'T12:00:00').toLocaleDateString('en-GB', { weekday: 'long', year: 'numeric', month: 'long', day: 'numeric' });
 }
-interface ServiceAPI { _id: string; name: string; description: string; icon: string; pricingType: 'flat'|'hourly'; hourlyRate: number; flatRateMode: 'quote'|'rooms'; rooms: {id:string;name:string;price:number;icon:string}[]; extras: {id:string;name:string;price:number;icon:string}[]; }
+interface ServiceAPI { _id: string; name: string; description: string; icon: string; pricingType: 'flat'|'hourly'; hourlyRate: number; flatRateMode: 'quote'|'rooms'; quoteDescription: string; rooms: {id:string;name:string;price:number;icon:string}[]; extras: {id:string;name:string;price:number;icon:string}[]; }
 function calcPrices(svc: ServiceAPI | undefined, flatItems: Record<string,number>, addons: string[], hours: number, frequency: string, pricingType: 'flat'|'hourly') {
   if (!svc) return { base: 0, extras: 0, discount: 0, total: 0 };
   let base = 0;
@@ -136,7 +136,14 @@ export default function BookingPage() {
   const selectService = (id: string) => {
     const svc = services.find(s => s._id === id);
     setServiceId(id);
-    if (svc) { setPricingType(svc.pricingType); setFlatItems({}); setAddons([]); }
+    if (svc) { 
+      setPricingType(svc.pricingType); 
+      setFlatItems({}); 
+      setAddons([]); 
+      if (svc.pricingType === 'flat' && svc.flatRateMode === 'quote' && svc.quoteDescription) {
+        setHourlyDesc(svc.quoteDescription);
+      }
+    }
   };
 
   const toggleAddon = (id: string) => setAddons(p => p.includes(id) ? p.filter(a => a !== id) : [...p, id]);

@@ -30,6 +30,7 @@ export interface IService extends Document {
   pricingType: 'flat' | 'hourly';
   hourlyRate: number;
   flatRateMode: 'quote' | 'rooms';
+  quoteDescription: string;
   rooms: IRoom[];
   extras: IExtra[];
   active: boolean;
@@ -77,6 +78,7 @@ const ServiceSchema = new Schema<IService>(
     pricingType: { type: String, enum: ['flat', 'hourly'], default: 'flat' },
     hourlyRate: { type: Number, default: 0 },
     flatRateMode: { type: String, enum: ['quote', 'rooms'], default: 'rooms' },
+    quoteDescription: { type: String, default: '' },
     rooms: [RoomSchema],
     extras: [ExtraSchema],
     active: { type: Boolean, default: true },

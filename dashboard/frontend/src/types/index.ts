@@ -29,6 +29,7 @@ export interface Service {
   pricingType: 'flat' | 'hourly';
   hourlyRate: number;
   flatRateMode: 'quote' | 'rooms';
+  quoteDescription: string;
   rooms: Room[];
   extras: Extra[];
   active: boolean;

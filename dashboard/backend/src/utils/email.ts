@@ -112,6 +112,7 @@ export const sendBookingEmails = async (booking: {
         <tr><td style="padding:8px 12px;font-weight:600;background:#f7fafc">Frequency</td><td style="padding:8px 12px">${freqLabels[booking.frequency] || booking.frequency}</td></tr>
         <tr><td style="padding:8px 12px;font-weight:600;background:#f7fafc">Date</td><td style="padding:8px 12px">${dateStr}</td></tr>
         <tr><td style="padding:8px 12px;font-weight:600;background:#f7fafc">Time</td><td style="padding:8px 12px">${booking.timeSlot}</td></tr>
+        ${booking.hourlyDescription ? `<tr><td style="padding:8px 12px;font-weight:600;background:#f7fafc">${booking.pricingType === 'hourly' ? 'Task Description' : 'Quote Details'}</td><td style="padding:8px 12px">${booking.hourlyDescription.replace(/\n/g, '<br>')}</td></tr>` : ''}
         ${booking.notes ? `<tr><td style="padding:8px 12px;font-weight:600;background:#f7fafc">Notes</td><td style="padding:8px 12px">${booking.notes}</td></tr>` : ''}
       </table>
       <h3 style="color:#2d3748;margin:0 0 12px">Price Breakdown</h3>

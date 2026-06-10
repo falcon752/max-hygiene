@@ -16,6 +16,7 @@ const emptyService = (): Partial<Service> => ({
   pricingType: 'flat',
   hourlyRate: 0,
   flatRateMode: 'rooms',
+  quoteDescription: '',
   rooms: [],
   extras: [],
   active: true,
@@ -291,6 +292,20 @@ export default function ServicesPage() {
                     <button className="btn btn-ghost btn-sm" type="button" onClick={() => removeRoom(i)} style={{ color: 'var(--danger)' }}><i className="fas fa-times" /></button>
                   </div>
                 ))}
+              </div>
+            </div>
+          )}
+
+          {/* Quote Description (only for flat+quote mode) */}
+          {editing.pricingType === 'flat' && editing.flatRateMode === 'quote' && (
+            <div className={styles.formSection}>
+              <h4 className={styles.formSectionTitle}>Quote Request Description</h4>
+              <p style={{ fontSize: '0.85rem', color: 'var(--text-light)', marginBottom: '0.75rem' }}>
+                This description will be shown to customers when they request a quote for this service.
+              </p>
+              <div className="form-group">
+                <label className="form-label">Description</label>
+                <textarea className="form-control" rows={4} value={editing.quoteDescription || ''} onChange={(e) => setEditing((s) => ({ ...s, quoteDescription: e.target.value }))} placeholder="e.g. Please describe the cleaning you need, number of rooms, any specific areas of focus..." />
               </div>
             </div>
           )}
