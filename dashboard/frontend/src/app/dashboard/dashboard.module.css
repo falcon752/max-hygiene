@@ -1,0 +1,79 @@
+.layout {
+  display: flex;
+  min-height: 100vh;
+}
+
+.main {
+  margin-left: var(--sidebar-width);
+  flex: 1;
+  min-width: 0;
+}
+
+.content {
+  padding: 32px;
+  max-width: 1400px;
+}
+
+/* ── Mobile top header ── */
+.mobileHeader {
+  display: none;
+  position: fixed;
+  top: 0;
+  left: 0;
+  right: 0;
+  height: 56px;
+  background: var(--dark);
+  z-index: 98;
+  align-items: center;
+  justify-content: space-between;
+  padding: 0 16px;
+  box-shadow: 0 2px 8px rgba(0, 0, 0, 0.2);
+}
+
+.burgerBtn {
+  background: none;
+  border: none;
+  color: rgba(255, 255, 255, 0.8);
+  font-size: 1.2rem;
+  cursor: pointer;
+  padding: 6px 8px;
+  border-radius: 6px;
+  transition: background 0.2s, color 0.2s;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.burgerBtn:hover {
+  background: rgba(255, 255, 255, 0.1);
+  color: #fff;
+}
+
+.mobileTitle {
+  font-size: 1rem;
+  font-weight: 600;
+  color: #fff;
+  flex: 1;
+  text-align: center;
+}
+
+.mobileLogoWrap {
+  display: flex;
+  align-items: center;
+}
+
+/* ── Responsive breakpoint ── */
+@media (max-width: 768px) {
+  .mobileHeader {
+    display: flex;
+  }
+
+  .main {
+    margin-left: 0;
+    padding-top: 56px; /* clear the fixed mobile header */
+  }
+
+  .content {
+    padding: 20px 16px;
+  }
+}

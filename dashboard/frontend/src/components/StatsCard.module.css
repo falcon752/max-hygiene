@@ -1,0 +1,79 @@
+.card {
+  background: var(--white);
+  border-radius: var(--radius);
+  box-shadow: var(--shadow);
+  padding: 22px;
+  display: flex;
+  align-items: flex-start;
+  gap: 18px;
+  transition: box-shadow 0.2s;
+}
+
+.card:hover {
+  box-shadow: var(--shadow-md);
+}
+
+.icon {
+  width: 52px;
+  height: 52px;
+  border-radius: 12px;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  font-size: 1.4rem;
+  flex-shrink: 0;
+}
+
+.primary {
+  background: var(--primary-light);
+  color: var(--primary);
+}
+.secondary {
+  background: rgba(0, 217, 126, 0.12);
+  color: var(--secondary);
+}
+.danger {
+  background: rgba(252, 92, 125, 0.12);
+  color: var(--danger);
+}
+.warning {
+  background: rgba(246, 185, 59, 0.15);
+  color: var(--warning);
+}
+
+.content {
+  flex: 1;
+}
+
+.title {
+  font-size: 0.8rem;
+  font-weight: 500;
+  color: var(--text-light);
+  text-transform: uppercase;
+  letter-spacing: 0.04em;
+  margin-bottom: 6px;
+}
+
+.value {
+  font-size: 1.75rem;
+  font-weight: 700;
+  color: var(--dark);
+  line-height: 1;
+}
+
+.trend {
+  font-size: 0.78rem;
+  font-weight: 500;
+  display: flex;
+  align-items: center;
+  gap: 4px;
+  margin-top: 6px;
+}
+
+.up {
+  color: var(--secondary);
+}
+
+.down {
+  color: var(--danger);
+}
