@@ -145,3 +145,81 @@
   border-radius: var(--radius-sm);
   font-size: 0.87rem;
 }
+
+.iconPicker {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.iconPickerGrid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(94px, 1fr));
+  gap: 8px;
+  max-height: 252px;
+  overflow-y: auto;
+  padding: 2px;
+}
+
+.iconOption {
+  min-height: 74px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  color: var(--text);
+  display: flex;
+  flex-direction: column;
+  align-items: center;
+  justify-content: center;
+  gap: 7px;
+  padding: 8px;
+  transition: border-color 0.2s, box-shadow 0.2s, color 0.2s, background 0.2s;
+}
+
+.iconOption:hover,
+.iconOptionSelected {
+  border-color: var(--primary);
+  color: var(--primary);
+  box-shadow: 0 0 0 3px var(--primary-light);
+}
+
+.iconOptionSelected {
+  background: var(--primary-light);
+}
+
+.iconOption i {
+  font-size: 1.15rem;
+  line-height: 1;
+}
+
+.iconOption span {
+  width: 100%;
+  font-size: 0.72rem;
+  font-weight: 500;
+  line-height: 1.2;
+  text-align: center;
+  overflow-wrap: anywhere;
+}
+
+.iconManualRow {
+  display: grid;
+  grid-template-columns: 42px minmax(0, 1fr);
+  gap: 8px;
+  align-items: center;
+}
+
+.iconPreview {
+  width: 42px;
+  height: 42px;
+  border: 1.5px solid var(--border);
+  border-radius: var(--radius-sm);
+  background: var(--white);
+  color: var(--primary);
+  display: flex;
+  align-items: center;
+  justify-content: center;
+}
+
+.iconPreview i {
+  font-size: 1.05rem;
+}

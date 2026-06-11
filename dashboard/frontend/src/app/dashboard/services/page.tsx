@@ -9,6 +9,51 @@ import styles from './services.module.css';
 
 const DEFAULT_SLOTS = ['08:00', '09:00', '10:00', '11:00', '13:00', '14:00', '15:00', '16:00'];
 
+const ICON_OPTIONS = [
+  { label: 'Broom', className: 'fas fa-broom' },
+  { label: 'Home', className: 'fas fa-home' },
+  { label: 'Building', className: 'fas fa-building' },
+  { label: 'Key', className: 'fas fa-key' },
+  { label: 'Moving Truck', className: 'fas fa-truck-moving' },
+  { label: 'Tools', className: 'fas fa-tools' },
+  { label: 'Shield', className: 'fas fa-shield-alt' },
+  { label: 'Headset', className: 'fas fa-headset' },
+  { label: 'Tasks', className: 'fas fa-tasks' },
+  { label: 'Star', className: 'fas fa-star' },
+  { label: 'Bath', className: 'fas fa-bath' },
+  { label: 'Bed', className: 'fas fa-bed' },
+  { label: 'Couch', className: 'fas fa-couch' },
+  { label: 'Kitchen', className: 'fas fa-utensils' },
+  { label: 'Sun Room', className: 'fas fa-sun' },
+  { label: 'Door Open', className: 'fas fa-door-open' },
+  { label: 'Wind', className: 'fas fa-wind' },
+  { label: 'Fire', className: 'fas fa-fire' },
+  { label: 'Windows', className: 'fas fa-th' },
+  { label: 'Cupboard', className: 'fas fa-archive' },
+  { label: 'Fridge', className: 'fas fa-snowflake' },
+  { label: 'Products', className: 'fas fa-flask' },
+  { label: 'Pet Home', className: 'fas fa-paw' },
+  { label: 'Laundry', className: 'fas fa-tshirt' },
+  { label: 'Plus', className: 'fas fa-plus' },
+  { label: 'Plus Circle', className: 'fas fa-plus-circle' },
+  { label: 'Spray Can', className: 'fas fa-spray-can' },
+  { label: 'Soap', className: 'fas fa-soap' },
+  { label: 'Sink', className: 'fas fa-sink' },
+  { label: 'Toilet', className: 'fas fa-toilet' },
+  { label: 'Water', className: 'fas fa-tint' },
+  { label: 'Leaf', className: 'fas fa-leaf' },
+  { label: 'Recycle', className: 'fas fa-recycle' },
+  { label: 'Clipboard', className: 'fas fa-clipboard-list' },
+  { label: 'Calendar', className: 'fas fa-calendar-alt' },
+  { label: 'Clock', className: 'fas fa-clock' },
+  { label: 'Tag', className: 'fas fa-tag' },
+  { label: 'Check', className: 'fas fa-check' },
+  { label: 'Info', className: 'fas fa-info-circle' },
+  { label: 'Envelope', className: 'fas fa-envelope' },
+  { label: 'Phone', className: 'fas fa-phone' },
+  { label: 'Map Marker', className: 'fas fa-map-marker-alt' },
+];
+
 const emptyService = (): Partial<Service> => ({
   name: '',
   description: '',
@@ -24,6 +69,47 @@ const emptyService = (): Partial<Service> => ({
 
 const emptyRoom = (): Room => ({ id: '', name: '', price: 0, icon: 'fas fa-home', forms: [] });
 const emptyExtra = (): Extra => ({ id: '', name: '', price: 0, icon: 'fas fa-plus' });
+
+interface IconPickerProps {
+  value?: string;
+  onChange: (value: string) => void;
+}
+
+function IconPicker({ value = '', onChange }: IconPickerProps) {
+  return (
+    <div className={styles.iconPicker}>
+      <div className={styles.iconPickerGrid}>
+        {ICON_OPTIONS.map((icon) => {
+          const selected = value === icon.className;
+          return (
+            <button
+              key={icon.className}
+              type="button"
+              className={`${styles.iconOption} ${selected ? styles.iconOptionSelected : ''}`}
+              onClick={() => onChange(icon.className)}
+              aria-pressed={selected}
+              title={icon.className}
+            >
+              <i className={icon.className} />
+              <span>{icon.label}</span>
+            </button>
+          );
+        })}
+      </div>
+      <div className={styles.iconManualRow}>
+        <div className={styles.iconPreview} aria-hidden="true">
+          <i className={value || 'fas fa-broom'} />
+        </div>
+        <input
+          className="form-control"
+          value={value}
+          onChange={(e) => onChange(e.target.value)}
+          placeholder="fas fa-broom"
+        />
+      </div>
+    </div>
+  );
+}
 
 export default function ServicesPage() {
   const [services, setServices] = useState<Service[]>([]);
@@ -230,8 +316,8 @@ export default function ServicesPage() {
                 <input className="form-control" value={editing.name || ''} onChange={(e) => setEditing((s) => ({ ...s, name: e.target.value }))} placeholder="e.g. Residential Deep Clean" />
               </div>
               <div className="form-group" style={{ flex: 1 }}>
-                <label className="form-label">Icon Class</label>
-                <input className="form-control" value={editing.icon || ''} onChange={(e) => setEditing((s) => ({ ...s, icon: e.target.value }))} placeholder="fas fa-broom" />
+                <label className="form-label">Icon</label>
+                <IconPicker value={editing.icon || ''} onChange={(icon) => setEditing((s) => ({ ...s, icon }))} />
               </div>
             </div>
             <div className="form-group">
@@ -337,7 +423,7 @@ export default function ServicesPage() {
       </Modal>
 
       {/* Room Form Modal */}
-      <Modal open={roomModal} onClose={() => setRoomModal(false)} title={roomEditIdx !== null ? 'Edit Room' : 'Add Room'} size="sm"
+      <Modal open={roomModal} onClose={() => setRoomModal(false)} title={roomEditIdx !== null ? 'Edit Room' : 'Add Room'} size="lg"
         footer={
           <>
             <button className="btn btn-outline" onClick={() => setRoomModal(false)}>Cancel</button>
@@ -355,14 +441,14 @@ export default function ServicesPage() {
             <input type="number" className="form-control" value={editingRoom.price} onChange={(e) => setEditingRoom((r) => ({ ...r, price: parseFloat(e.target.value) || 0 }))} min={0} step={1} />
           </div>
           <div className="form-group">
-            <label className="form-label">Icon Class</label>
-            <input className="form-control" value={editingRoom.icon} onChange={(e) => setEditingRoom((r) => ({ ...r, icon: e.target.value }))} placeholder="fas fa-bath" />
+            <label className="form-label">Icon</label>
+            <IconPicker value={editingRoom.icon} onChange={(icon) => setEditingRoom((r) => ({ ...r, icon }))} />
           </div>
         </div>
       </Modal>
 
       {/* Extra Form Modal */}
-      <Modal open={extraModal} onClose={() => setExtraModal(false)} title={extraEditIdx !== null ? 'Edit Extra' : 'Add Extra'} size="sm"
+      <Modal open={extraModal} onClose={() => setExtraModal(false)} title={extraEditIdx !== null ? 'Edit Extra' : 'Add Extra'} size="lg"
         footer={
           <>
             <button className="btn btn-outline" onClick={() => setExtraModal(false)}>Cancel</button>
@@ -380,8 +466,8 @@ export default function ServicesPage() {
             <input type="number" className="form-control" value={editingExtra.price} onChange={(e) => setEditingExtra((x) => ({ ...x, price: parseFloat(e.target.value) || 0 }))} min={0} step={1} />
           </div>
           <div className="form-group">
-            <label className="form-label">Icon Class</label>
-            <input className="form-control" value={editingExtra.icon} onChange={(e) => setEditingExtra((x) => ({ ...x, icon: e.target.value }))} placeholder="fas fa-flask" />
+            <label className="form-label">Icon</label>
+            <IconPicker value={editingExtra.icon} onChange={(icon) => setEditingExtra((x) => ({ ...x, icon }))} />
           </div>
         </div>
       </Modal>
