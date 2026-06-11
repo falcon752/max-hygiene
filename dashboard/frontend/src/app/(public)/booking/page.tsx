@@ -78,6 +78,19 @@ export default function BookingPage() {
   const selectedSvc = services.find(s => s._id === serviceId);
   const prices = useMemo(() => calcPrices(selectedSvc, flatItems, addons, hours, frequency, pricingType),
     [selectedSvc, flatItems, addons, hours, frequency, pricingType]);
+  const selectedFrequency = FREQUENCIES.find(f => f.id === frequency);
+  const selectedRooms = selectedSvc
+    ? Object.entries(flatItems).map(([id, qty]) => {
+      const room = selectedSvc.rooms.find(r => r.id === id);
+      return room ? { ...room, qty } : null;
+    }).filter((room): room is ServiceAPI['rooms'][number] & { qty: number } => Boolean(room))
+    : [];
+  const selectedExtras = selectedSvc
+    ? addons.map(id => selectedSvc.extras.find(extra => extra.id === id)).filter((extra): extra is ServiceAPI['extras'][number] => Boolean(extra))
+    : [];
+  const finalNotes = pricingType === 'hourly' && hourlyDesc
+    ? (notes ? `${notes}\n\nTask description: ${hourlyDesc}` : `Task description: ${hourlyDesc}`)
+    : notes;
 
   useEffect(() => {
     fetch(`${API_BASE}/services`).then(r => r.json()).then(d => { if (d.data) setServices(d.data); }).catch(console.error).finally(() => setLoadingSvcs(false));
@@ -129,6 +142,7 @@ export default function BookingPage() {
       if (n === 2 && !serviceId) { showToast('Please select a service first.', true); return; }
       if (n === 3 && pricingType === 'hourly' && (!hours || !hourlyDesc.trim())) { showToast('Please fill in hours and task description.', true); return; }
       if (n === 4 && (!date || !timeSlot)) { showToast('Please select a date and time slot.', true); return; }
+      if (n === 5 && !validateStep4()) return;
     }
     setStep(n); window.scrollTo(0, 0);
   };
@@ -212,10 +226,32 @@ export default function BookingPage() {
     </>);
   };
 
+  const bookingSummaryCard = (includeContact = false) => (
+    selectedSvc ? <div className="quote-summary-card">
+      <table style={{width:'100%',borderCollapse:'collapse',fontSize:'.875rem'}}><tbody>
+        <tr><td style={{padding:'6px 0',color:'#718096'}}>Service</td><td style={{textAlign:'right',fontWeight:600}}>{selectedSvc.name}</td></tr>
+        <tr><td style={{padding:'6px 0',color:'#718096'}}>Property</td><td style={{textAlign:'right',textTransform:'capitalize'}}>{propertyType}</td></tr>
+        <tr><td style={{padding:'6px 0',color:'#718096'}}>Date</td><td style={{textAlign:'right'}}>{fmtDate(date)}</td></tr>
+        <tr><td style={{padding:'6px 0',color:'#718096'}}>Time</td><td style={{textAlign:'right'}}>{fmtTime(timeSlot)}</td></tr>
+        <tr><td style={{padding:'6px 0',color:'#718096'}}>Frequency</td><td style={{textAlign:'right'}}>{selectedFrequency?.label}</td></tr>
+        {pricingType === 'hourly' && <tr><td style={{padding:'6px 0',color:'#718096'}}>Hours</td><td style={{textAlign:'right'}}>{hours} hrs</td></tr>}
+        {selectedRooms.length > 0 && <tr><td style={{padding:'6px 0',color:'#718096',verticalAlign:'top'}}>Rooms</td><td style={{textAlign:'right'}}>{selectedRooms.map(room => <div key={room.id}>{room.name} x{room.qty}</div>)}</td></tr>}
+        {selectedExtras.length > 0 && <tr><td style={{padding:'6px 0',color:'#718096',verticalAlign:'top'}}>Extras</td><td style={{textAlign:'right'}}>{selectedExtras.map(extra => <div key={extra.id}>{extra.name}</div>)}</td></tr>}
+        {hourlyDesc && <tr><td style={{padding:'6px 0',color:'#718096',verticalAlign:'top'}}>Description</td><td style={{textAlign:'right',maxWidth:'260px'}}>{hourlyDesc}</td></tr>}
+        {includeContact && <>
+          <tr style={{borderTop:'1px solid #e2e8f0'}}><td style={{padding:'8px 0 6px',color:'#718096'}}>Name</td><td style={{textAlign:'right',fontWeight:600}}>{firstName} {lastName}</td></tr>
+          <tr><td style={{padding:'6px 0',color:'#718096'}}>Email</td><td style={{textAlign:'right'}}>{email}</td></tr>
+          <tr><td style={{padding:'6px 0',color:'#718096'}}>Phone</td><td style={{textAlign:'right'}}>{phone}</td></tr>
+          <tr><td style={{padding:'6px 0',color:'#718096',verticalAlign:'top'}}>Address</td><td style={{textAlign:'right'}}>{addressLine}<br />{city}, {postcode}</td></tr>
+          {notes && <tr><td style={{padding:'6px 0',color:'#718096',verticalAlign:'top'}}>Notes</td><td style={{textAlign:'right',maxWidth:'260px'}}>{notes}</td></tr>}
+        </>}
+        <tr style={{borderTop:'1px solid #e2e8f0'}}><td style={{padding:'8px 0',fontWeight:700}}>Estimated Total</td><td style={{textAlign:'right',fontWeight:700,color:'#3bb0bd',fontSize:'1.1rem'}}>£{prices.total.toFixed(2)}</td></tr>
+      </tbody></table>
+    </div> : null
+  );
+
   const submitBooking = async () => {
-    if (!validateStep4()) return;
     setSubmitting(true);
-    const finalNotes = pricingType==='hourly'&&hourlyDesc ? (notes?`${notes}\n\nTask description: ${hourlyDesc}`:`Task description: ${hourlyDesc}`) : notes;
     try {
       const res = await fetch(`${API_BASE}/bookings`, {
         method:'POST', headers:{'Content-Type':'application/json'},
@@ -224,15 +260,15 @@ export default function BookingPage() {
           address:{line1:addressLine,city,postcode},
           service:{id:serviceId,name:selectedSvc?.name||''},
           propertyType,pricingType,
-          rooms:Object.entries(flatItems).map(([id,qty])=>{const r=selectedSvc?.rooms.find(r=>r.id===id);return r?{id,name:r.name,qty,price:r.price}:null;}).filter(Boolean),
-          extras:addons.map(id=>{const e=selectedSvc?.extras.find(e=>e.id===id);return e?{id,name:e.name,price:e.price}:null;}).filter(Boolean),
+          rooms:selectedRooms.map(room => ({ id: room.id, name: room.name, qty: room.qty, price: room.price })),
+          extras:selectedExtras.map(extra => ({ id: extra.id, name: extra.name, price: extra.price })),
           hours:pricingType==='hourly'?hours:0, hourlyDescription:hourlyDesc,
           frequency:FREQ_MAP[frequency]||'once', date, timeSlot,
           notes:finalNotes, basePrice:prices.base, discount:prices.discount, extrasTotal:prices.extras, totalPrice:prices.total,
         }),
       });
       const data = await res.json();
-      if (data.success) { setBookingRef(data.data.ref); setStep(5); window.scrollTo(0,0); }
+      if (data.success) { setBookingRef(data.data.ref); setStep(6); window.scrollTo(0,0); }
       else showToast(data.error||'Booking failed. Please try again.', true);
     } catch { showToast('Network error. Please call +44 7743173136.', true); }
     finally { setSubmitting(false); }
@@ -254,7 +290,7 @@ export default function BookingPage() {
 
     <div className="booking-progress">
       <div className="progress-steps">
-        {[{label:'Contact',n:0},{label:'Service',n:1},{label:'Details',n:2},{label:'Schedule',n:3},{label:'Your Info',n:4},{label:'Quote',n:5,check:true}].map(({label,n,check})=>(
+        {[{label:'Contact',n:0},{label:'Service',n:1},{label:'Details',n:2},{label:'Schedule',n:3},{label:'Your Info',n:4},{label:'Review',n:5},{label:'Quote',n:6,check:true}].map(({label,n,check})=>(
           <div key={n} className={`progress-step${step===n?' active':''}${step>n?' done':''}`} onClick={step>n?()=>goTo(n):undefined} style={{cursor:step>n?'pointer':'default'}}>
             <div className="step-bubble">{check?<i className="fas fa-check" style={{fontSize:'.75rem'}}/>:n+1}</div>
             <span className="step-label">{label}</span>
@@ -429,8 +465,8 @@ export default function BookingPage() {
           </div>
           <div className="step-actions">
             <button className="btn-back" onClick={()=>goTo(3)}><i className="fas fa-arrow-left"/> Back</button>
-            <button className="btn-submit" disabled={submitting} onClick={submitBooking}>
-              {submitting?<><i className="fas fa-circle-notch fa-spin" style={{marginRight:'.4rem'}}/> Sending…</>:<><i className="fas fa-paper-plane" style={{marginRight:'.4rem'}}/> Get My Free Quote</>}
+            <button className="btn-submit" onClick={()=>goTo(5)}>
+              <i className="fas fa-clipboard-check" style={{marginRight:'.4rem'}}/> Review Booking
             </button>
           </div>
         </div>
@@ -438,20 +474,28 @@ export default function BookingPage() {
         {/* STEP 5 */}
         <div className={`step-card${step===5?' active':''}`}>
           <div className="confirmation-wrap">
+            <div className="confirm-icon"><i className="fas fa-clipboard-check"/></div>
+            <div className="confirm-title">Review Your Booking</div>
+            <div className="confirm-sub">Please check everything below before sending your quote request.</div>
+            {bookingSummaryCard(true)}
+            <div className="step-actions" style={{maxWidth:'480px',margin:'0 auto'}}>
+              <button className="btn-back" onClick={()=>goTo(4)}><i className="fas fa-arrow-left"/> Edit Details</button>
+              <button className="btn-submit" disabled={submitting} onClick={submitBooking}>
+                {submitting?<><i className="fas fa-circle-notch fa-spin" style={{marginRight:'.4rem'}}/> Sending…</>:<><i className="fas fa-paper-plane" style={{marginRight:'.4rem'}}/> Get My Free Quote</>}
+              </button>
+            </div>
+          </div>
+        </div>
+
+        {/* STEP 6 */}
+        <div className={`step-card${step===6?' active':''}`}>
+          <div className="confirmation-wrap">
             <div className="confirm-icon"><i className="fas fa-check"/></div>
             <div className="confirm-title">Booking Received!</div>
             <div className="confirm-sub">Your request has been sent. The Max-Hygiene team will confirm shortly.</div>
             <div className="booking-ref-box"><i className="fas fa-hashtag"/><span>{bookingRef}</span></div>
             <div className="confirm-email-note">A confirmation email has been sent to <strong>{email}</strong></div>
-            {selectedSvc&&<div className="quote-summary-card">
-              <table style={{width:'100%',borderCollapse:'collapse',fontSize:'.875rem'}}><tbody>
-                <tr><td style={{padding:'6px 0',color:'#718096'}}>Service</td><td style={{textAlign:'right',fontWeight:600}}>{selectedSvc.name}</td></tr>
-                <tr><td style={{padding:'6px 0',color:'#718096'}}>Date</td><td style={{textAlign:'right'}}>{fmtDate(date)}</td></tr>
-                <tr><td style={{padding:'6px 0',color:'#718096'}}>Time</td><td style={{textAlign:'right'}}>{fmtTime(timeSlot)}</td></tr>
-                <tr><td style={{padding:'6px 0',color:'#718096'}}>Frequency</td><td style={{textAlign:'right'}}>{FREQUENCIES.find(f=>f.id===frequency)?.label}</td></tr>
-                <tr style={{borderTop:'1px solid #e2e8f0'}}><td style={{padding:'8px 0',fontWeight:700}}>Estimated Total</td><td style={{textAlign:'right',fontWeight:700,color:'#3bb0bd',fontSize:'1.1rem'}}>£{prices.total.toFixed(2)}</td></tr>
-              </tbody></table>
-            </div>}
+            {bookingSummaryCard()}
             {/* <div className="confirm-note"><i className="fas fa-info-circle"/><span><strong>No payment required today.</strong> Payment will be arranged on the day of service.</span></div> */}
             <Link href="/" className="btn-home"><i className="fas fa-home"/> Back to Home</Link>
           </div>
