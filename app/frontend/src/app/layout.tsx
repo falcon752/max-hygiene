@@ -6,7 +6,7 @@ export const metadata: Metadata = {
     template: '%s | Max-Hygiene',
     default: 'Max-Hygiene',
   },
-  description: 'Professional cleaning services in Glasgow and surroundings.',
+  description: 'Professional cleaning services across Scotland.',
   icons: {
     icon: '/images/logo1.png',
     apple: '/images/logo1.png',

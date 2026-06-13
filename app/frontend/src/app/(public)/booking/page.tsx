@@ -285,7 +285,7 @@ export default function BookingPage() {
   return (<>
     <div className="booking-hero">
       <h1><i className="fas fa-calendar-check" style={{marginRight:'.5rem'}} />Book Your Cleaning</h1>
-      <p>Professional cleaning across Glasgow &amp; surroundings (30 miles). Instant quote, no payment online.</p>
+      <p>Professional cleaning across Scotland. Instant quote, no payment online.</p>
     </div>
 
     <div className="booking-progress">
@@ -330,7 +330,6 @@ export default function BookingPage() {
                   <div className="svc-card-icon"><i className={svc.icon}/></div>
                   <div className="svc-card-name">{svc.name}</div>
                   <div className="svc-card-desc">{svc.description}</div>
-                  <div className="svc-card-price">{svc.pricingType==='hourly'?`£${svc.hourlyRate}/hr`:'Flat Rate'}</div>
                   {serviceId===svc._id&&<div className="svc-card-check"><i className="fas fa-check"/></div>}
                 </div>
               ))}
@@ -358,14 +357,13 @@ export default function BookingPage() {
             ))}
           </div>
           {pricingType==='flat'&&selectedSvc?.flatRateMode==='rooms'&&(<>
-            <p style={{fontSize:'.85rem',color:'#718096',marginBottom:'.8rem'}}>Price based on selected rooms and tasks.</p>
+            <p style={{fontSize:'.85rem',color:'#718096',marginBottom:'.8rem'}}>Select the rooms and tasks you need cleaned.</p>
             <div className="addon-grid">
               {selectedSvc.rooms.map(room=>{const qty=flatItems[room.id]||0;return(
                 <div key={room.id} className={`flat-item-card${qty>0?' selected':''}`} onClick={()=>openQtyModal(room)}>
                   {qty>0&&<span className="qty-badge">{qty}</span>}
                   <div className="flat-item-icon"><i className={room.icon}/></div>
                   <div className="flat-item-name">{room.name}</div>
-                  <div className="flat-item-price">£{room.price} each</div>
                 </div>
               );})}
             </div>
@@ -382,7 +380,7 @@ export default function BookingPage() {
               <button className="hours-btn" onClick={()=>setHours(h=>Math.max(1,h-1))}><i className="fas fa-minus"/></button>
               <div className="hours-display">{hours}</div>
               <button className="hours-btn" onClick={()=>setHours(h=>Math.min(24,h+1))}><i className="fas fa-plus"/></button>
-              <span className="hours-label">hrs &nbsp;×&nbsp; <strong>£{selectedSvc?.hourlyRate||0}/hr</strong></span>
+              <span className="hours-label">hrs</span>
             </div>
             <div className="form-group" style={{marginTop:'1.5rem'}}>
               <label style={{fontSize:'.82rem',fontWeight:600,color:'#4a5568',marginBottom:'.35rem',display:'block'}}>Describe what you want us to do *</label>
@@ -397,7 +395,6 @@ export default function BookingPage() {
                   <div className="addon-check"><i className="fas fa-check"/></div>
                   <div className="addon-icon"><i className={extra.icon}/></div>
                   <div className="addon-name">{extra.name}</div>
-                  <div className="addon-price">+£{extra.price}</div>
                 </div>
               ))}
             </div>
@@ -515,13 +512,11 @@ export default function BookingPage() {
           <button className="qty-modal-close" onClick={()=>setQtyRoom(null)}>&#215;</button>
           <div className="qty-m-icon"><i className={qtyRoom.icon}/></div>
           <div className="qty-m-title">{qtyRoom.name}</div>
-          <div className="qty-m-unit">£{qtyRoom.price} per room</div>
           <div className="qty-stepper">
             <button className="qty-btn" onClick={()=>setQtyValue(v=>Math.max(0,v-1))}>&#8722;</button>
             <div className="qty-value">{qtyValue}</div>
             <button className="qty-btn" onClick={()=>setQtyValue(v=>Math.min(20,v+1))}>&#43;</button>
           </div>
-          <div className="qty-subtotal">Subtotal: £{(qtyRoom.price*qtyValue).toFixed(2)}</div>
           {qtyValue>0&&<button className="qty-btn-remove" onClick={()=>setQtyValue(0)}>&#128465; Remove from booking</button>}
           <div className="qty-modal-actions">
             <button className="qty-btn-cancel" onClick={()=>setQtyRoom(null)}>Cancel</button>

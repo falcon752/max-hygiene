@@ -19,7 +19,7 @@ const WHY_US = [
   { icon: 'fas fa-headset',   title: 'Exceptional Customer Service',        text: "We pride ourselves on clear communication and a client-centric approach. You'll have a dedicated point of contact who is readily available to address any concerns or last-minute requests promptly, day or night." },
   { icon: 'fas fa-tasks',     title: 'Tailored Cleaning Solutions',         text: "We don't offer a \"one-size-fits-all\" service. Instead, we provide customized cleaning plans designed around your specific requirements, schedule, and budget, whether you need a daily, weekly, or monthly service." },
   { icon: 'fas fa-heartbeat', title: 'Health & Safety Commitment',          text: 'We use eco-friendly and non-toxic cleaning products upon request, reducing harmful chemical exposure and improving indoor air quality. A cleaner space means reduced germs and illness, contributing to fewer sick days.' },
-  { icon: 'fas fa-star',      title: 'Proven Reputation',                   text: 'Our high client retention rates and glowing testimonials speak for themselves. Our growth is largely driven by word-of-mouth recommendations, a testament to our commitment to quality and client satisfaction.' },
+  { icon: 'fas fa-star',      title: 'Proven Reputation',                   text: 'Our high client retention rates speak for themselves. Our growth is largely driven by word-of-mouth recommendations, a testament to our commitment to quality and client satisfaction.' },
 ];
 
 const ABOUT_CARDS = [
@@ -67,8 +67,8 @@ export default function HomePage() {
       {/* Hero */}
       <section id="home" className="hero">
         <div className="hero-content">
-          <h1>Professional Cleaning Services in Glasgow and surroundings (30 Miles)</h1>
-          <p>We provide top-quality cleaning services for homes and offices across Glasgow and surroundings (30 Miles). Book now and experience the difference!</p>
+          <h1>Professional Cleaning Services Across Scotland</h1>
+          <p>We provide top-quality cleaning services for homes and offices across Scotland. Book now and experience the difference!</p>
           <Link href="/booking" className="btn btn-primary" style={{ marginRight: '.75rem' }}>Book Now</Link>
           <a href="#contact" className="btn" style={{ background: 'rgba(255,255,255,.15)', color: '#fff', border: '2px solid rgba(255,255,255,.6)' }}>Contact Us</a>
         </div>
