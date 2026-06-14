@@ -34,6 +34,7 @@ router.post('/', async (req: Request, res: Response): Promise<void> => {
             <tr><td style="padding:8px;font-weight:600;background:#f7fafc">Message</td><td style="padding:8px">${message.replace(/\n/g,'<br>')}</td></tr>
           </table>
         </div>`,
+      text: `New Website Enquiry\n\nName: ${name}\nEmail: ${email}\nPhone: ${phone || 'N/A'}\nService: ${service || 'N/A'}\nMessage: ${message}`,
     });
     res.json({ success: true });
   } catch (err: unknown) {

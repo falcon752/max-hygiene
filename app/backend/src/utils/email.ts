@@ -34,6 +34,7 @@ export const sendLeadEmail = async (data: {
           <tr><td style="padding:8px;font-weight:600">Time</td><td style="padding:8px">${new Date().toLocaleString('en-GB')}</td></tr>
         </table>
       </div>`,
+    text: `New Lead Received\nName: ${data.name}\nEmail: ${data.email}\nPhone: ${data.phone}\nTime: ${new Date().toLocaleString('en-GB')}`,
   });
 };
 
@@ -150,18 +151,23 @@ export const sendBookingEmails = async (booking: {
       <p style="color:#718096;font-size:0.85rem">Max-Hygiene Cleaning Services<br>Technology House, 9 Newton Place, Glasgow G3 7PR</p>
     </div>`;
 
+  const adminText = `New Booking — ${booking.service.name}\nRef: ${booking.ref}\n\nCustomer Details:\nName: ${booking.customer.firstName} ${booking.customer.lastName}\nEmail: ${booking.customer.email}\nPhone: ${booking.customer.phone}\nAddress: ${booking.address.line1}, ${booking.address.city}, ${booking.address.postcode}\n\nTotal Price: £${booking.totalPrice.toFixed(2)}`;
+  const clientText = `Hi ${booking.customer.firstName},\n\nThank you for booking with Max-Hygiene.\n\nYour Booking Reference: ${booking.ref}\nService: ${booking.service.name}\nDate: ${dateStr}\nTime: ${booking.timeSlot}\n\nEstimated Cost: £${booking.totalPrice.toFixed(2)}\n\nNo payment required today. Payment will be arranged on the day of service.\n\nMax-Hygiene Cleaning Services`;
+
   await Promise.all([
     transport.sendMail({
       from: `"${fromName}" <${fromAddr}>`,
       to: adminEmail,
       subject: `New Booking: ${booking.service.name} — ${booking.customer.firstName} ${booking.customer.lastName}`,
       html: adminHtml,
+      text: adminText,
     }),
     transport.sendMail({
       from: `"${fromName}" <${fromAddr}>`,
       to: booking.customer.email,
       subject: `Your Max-Hygiene Booking — ${booking.ref}`,
       html: clientHtml,
+      text: clientText,
     }),
   ]);
 };
