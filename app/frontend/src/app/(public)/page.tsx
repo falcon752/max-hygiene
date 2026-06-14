@@ -187,6 +187,10 @@ export default function HomePage() {
             </div>
             <div className="info-item">
               <i className="fas fa-phone" />
+              <p><a href="tel:03333357932" className="contact-link">0333 335 7932</a></p>
+            </div>
+            <div className="info-item">
+              <i className="fas fa-mobile-alt" />
               <p><a href="tel:+447743173136" className="contact-link">+44 7743173136</a></p>
             </div>
             <div className="info-item">

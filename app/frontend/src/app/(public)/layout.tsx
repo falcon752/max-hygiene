@@ -13,6 +13,9 @@ const NAV_LINKS = [
   { href: '/#contact', id: 'contact', icon: 'fas fa-envelope', label: 'Contact' },
   { href: '/booking', id: 'booking', icon: 'fas fa-calendar-check', label: 'Book Now' },
 ];
+const FACEBOOK_URL = 'https://www.facebook.com/share/191qSBKqwN/?mibextid=wwXIfr';
+const OFFICE_PHONE = '0333 335 7932';
+const OFFICE_PHONE_HREF = 'tel:03333357932';
 
 export default function PublicLayout({ children }: { children: React.ReactNode }) {
   const [open, setOpen] = useState(false);
@@ -123,7 +126,8 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
           })}
         </ul>
         <div className="social-links">
-          <a href="#" aria-label="Facebook"><i className="fab fa-facebook" /></a>
+          <a href={FACEBOOK_URL} target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i className="fab fa-facebook" /></a>
+          <a href={OFFICE_PHONE_HREF} aria-label={`Call ${OFFICE_PHONE}`}><i className="fas fa-phone" /></a>
           <a href="#" aria-label="Twitter"><i className="fab fa-twitter" /></a>
           <a href="#" aria-label="Instagram"><i className="fab fa-instagram" /></a>
         </div>
@@ -147,7 +151,8 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
                 <p>Professional cleaning services across Scotland.</p>
               </div>
               <div className="footer-social">
-                <a href="#" target="_blank" aria-label="Facebook"><i className="fab fa-facebook-f" /></a>
+                <a href={FACEBOOK_URL} target="_blank" rel="noopener noreferrer" aria-label="Facebook"><i className="fab fa-facebook-f" /></a>
+                <a href={OFFICE_PHONE_HREF} aria-label={`Call ${OFFICE_PHONE}`}><i className="fas fa-phone" /></a>
                 <a href="#" target="_blank" aria-label="Twitter"><i className="fab fa-twitter" /></a>
                 <a href="#" target="_blank" aria-label="Instagram"><i className="fab fa-instagram" /></a>
               </div>
@@ -176,6 +181,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
               <h3>Contact Us</h3>
               <div className="footer-contact">
                 <p><i className="fas fa-map-marker-alt" /> Technology House, 9 Newton Place, Glasgow G3 7PR</p>
+                <p><i className="fas fa-phone" /> {OFFICE_PHONE}</p>
                 <p><i className="fas fa-phone" /> +44 7743173136</p>
                 <p><i className="fas fa-envelope" /> MaxHygiene100@gmail.com</p>
               </div>
