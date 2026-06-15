@@ -6,27 +6,27 @@ import Link from 'next/link';
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
 
 const SERVICES = [
-  { icon: 'fas fa-home',         title: 'Residential Standard Clean', desc: 'Keep your home fresh and tidy with our regular maintenance cleaning.', features: ['Weekly, bi-weekly, or monthly options','Dusting, vacuuming, and mopping','Kitchen and bathroom maintenance','Customisable cleaning plans'] },
-  { icon: 'fas fa-broom',        title: 'Residential Deep Clean',     desc: 'Intensive top-to-bottom clean for a thorough refresh of your home.', features: ['Detailed cleaning of all areas','Skirting boards and window sills','Appliance interior cleaning','Ideal for spring cleans or move-ins'] },
-  { icon: 'fas fa-building',     title: 'Commercial Cleaning',         desc: 'Professional workspace cleaning for a productive, hygienic environment.', features: ['After-hours cleaning available','Sanitisation of high-touch areas','Restroom and break room maintenance','Flexible scheduling'] },
-  { icon: 'fas fa-key',          title: 'Short-let / Airbnb',          desc: 'Fast, reliable turnaround cleaning to get your property guest-ready.', features: ['Between-guest deep refresh','Linen and bed changing available','Restocking of essentials','Flexible same-day availability'] },
-  { icon: 'fas fa-truck-moving', title: 'End of Tenancy Cleaning',     desc: 'Comprehensive clean to ensure your full deposit return.', features: ['Full property cleaned to landlord standard','Oven, fridge, and cabinet deep clean','Window and skirting board cleaning','Ready for inspection'] },
+  { icon: 'fas fa-home', title: 'Residential Standard Clean', desc: 'Keep your home fresh and tidy with our regular maintenance cleaning.', features: ['Weekly, bi-weekly, or monthly options', 'Dusting, vacuuming, and mopping', 'Kitchen and bathroom maintenance', 'Customisable cleaning plans'] },
+  { icon: 'fas fa-broom', title: 'Residential Deep Clean', desc: 'Intensive top-to-bottom clean for a thorough refresh of your home.', features: ['Detailed cleaning of all areas', 'Skirting boards and window sills', 'Appliance interior cleaning', 'Ideal for spring cleans or move-ins'] },
+  { icon: 'fas fa-building', title: 'Commercial Cleaning', desc: 'Professional workspace cleaning for a productive, hygienic environment.', features: ['After-hours cleaning available', 'Sanitisation of high-touch areas', 'Restroom and break room maintenance', 'Flexible scheduling'] },
+  { icon: 'fas fa-key', title: 'Short-let / Airbnb', desc: 'Fast, reliable turnaround cleaning to get your property guest-ready.', features: ['Between-guest deep refresh', 'Linen and bed changing available', 'Restocking of essentials', 'Flexible same-day availability'] },
+  { icon: 'fas fa-truck-moving', title: 'End of Tenancy Cleaning', desc: 'Comprehensive clean to ensure your full deposit return.', features: ['Full property cleaned to landlord standard', 'Oven, fridge, and cabinet deep clean', 'Window and skirting board cleaning', 'Ready for inspection'] },
 ];
 
 const WHY_US = [
-  { icon: 'fas fa-tools',     title: 'Professional Expertise & Equipment', text: '"Everyone can clean, but not everyone can clean well". Our teams are professionally trained in the latest cleaning techniques and safety standards and use high-quality, professional-grade equipment and products to deliver superior results.' },
-  { icon: 'fas fa-shield-alt',title: 'Reliability & Consistency',           text: 'Our professional staff are rigorously vetted (including PVG/DBS checks) and fully insured, ensuring a trustworthy and reliable service every time. We use systematic checklists and regular quality control checks to ensure a consistent, spotless result.' },
-  { icon: 'fas fa-headset',   title: 'Exceptional Customer Service',        text: "We pride ourselves on clear communication and a client-centric approach. You'll have a dedicated point of contact who is readily available to address any concerns or last-minute requests promptly, day or night." },
-  { icon: 'fas fa-tasks',     title: 'Tailored Cleaning Solutions',         text: "We don't offer a \"one-size-fits-all\" service. Instead, we provide customized cleaning plans designed around your specific requirements, schedule, and budget, whether you need a daily, weekly, or monthly service." },
-  { icon: 'fas fa-heartbeat', title: 'Health & Safety Commitment',          text: 'We use eco-friendly and non-toxic cleaning products upon request, reducing harmful chemical exposure and improving indoor air quality. A cleaner space means reduced germs and illness, contributing to fewer sick days.' },
-  { icon: 'fas fa-star',      title: 'Proven Reputation',                   text: 'Our high client retention rates speak for themselves. Our growth is largely driven by word-of-mouth recommendations, a testament to our commitment to quality and client satisfaction.' },
+  { icon: 'fas fa-tools', title: 'Professional Expertise & Equipment', text: '"Everyone can clean, but not everyone can clean well". Our teams are professionally trained in the latest cleaning techniques and safety standards and use high-quality, professional-grade equipment and products to deliver superior results.' },
+  { icon: 'fas fa-shield-alt', title: 'Reliability & Consistency', text: 'Our professional staff are rigorously vetted (including PVG/DBS checks) and fully insured, ensuring a trustworthy and reliable service every time. We use systematic checklists and regular quality control checks to ensure a consistent, spotless result.' },
+  { icon: 'fas fa-headset', title: 'Exceptional Customer Service', text: "We pride ourselves on clear communication and a client-centric approach. You'll have a dedicated point of contact who is readily available to address any concerns or last-minute requests promptly, day or night." },
+  { icon: 'fas fa-tasks', title: 'Tailored Cleaning Solutions', text: "We don't offer a \"one-size-fits-all\" service. Instead, we provide customized cleaning plans designed around your specific requirements, schedule, and budget, whether you need a daily, weekly, or monthly service." },
+  { icon: 'fas fa-heartbeat', title: 'Health & Safety Commitment', text: 'We use eco-friendly and non-toxic cleaning products upon request, reducing harmful chemical exposure and improving indoor air quality. A cleaner space means reduced germs and illness, contributing to fewer sick days.' },
+  { icon: 'fas fa-star', title: 'Proven Reputation', text: 'Our high client retention rates speak for themselves. Our growth is largely driven by word-of-mouth recommendations, a testament to our commitment to quality and client satisfaction.' },
 ];
 
 const ABOUT_CARDS = [
-  { icon: 'fas fa-users',        title: 'Professional Team',      text: 'Our team consists of trained and vetted cleaning professionals committed to excellence in every service.' },
-  { icon: 'fas fa-leaf',         title: 'Eco-Friendly',           text: 'We use environmentally friendly cleaning products that are safe for your family, pets, and the planet.' },
-  { icon: 'fas fa-star',         title: '100% Satisfaction',      text: "Your satisfaction is our top priority. We're not happy until you're completely satisfied with our service." },
-  { icon: 'fas fa-calendar-alt', title: 'Flexible Scheduling',    text: 'We work around your busy schedule to provide cleaning services at your convenience.' },
+  { icon: 'fas fa-users', title: 'Professional Team', text: 'Our team consists of trained and vetted cleaning professionals committed to excellence in every service.' },
+  { icon: 'fas fa-leaf', title: 'Eco-Friendly', text: 'We use environmentally friendly cleaning products that are safe for your family, pets, and the planet.' },
+  { icon: 'fas fa-star', title: '100% Satisfaction', text: "Your satisfaction is our top priority. We're not happy until you're completely satisfied with our service." },
+  { icon: 'fas fa-calendar-alt', title: 'Flexible Scheduling', text: 'We work around your busy schedule to provide cleaning services at your convenience.' },
 ];
 
 export default function HomePage() {
@@ -56,7 +56,7 @@ export default function HomePage() {
         setSendError(data.error || 'Failed to send. Please try again.');
       }
     } catch {
-      setSendError('Network error. Please email us directly at MaxHygiene100@gmail.com');
+      setSendError('Network error. Please email us directly at info@max-hygienecleaningpro.co.uk');
     } finally {
       setSending(false);
     }
@@ -190,12 +190,8 @@ export default function HomePage() {
               <p><a href="tel:03333357932" className="contact-link">0333 335 7932</a></p>
             </div>
             <div className="info-item">
-              <i className="fas fa-mobile-alt" />
-              <p><a href="tel:+447743173136" className="contact-link">+44 7743173136</a></p>
-            </div>
-            <div className="info-item">
               <i className="fas fa-envelope" />
-              <p><a href="mailto:MaxHygiene100@gmail.com" className="contact-link">MaxHygiene100@gmail.com</a></p>
+              <p><a href="mailto:info@max-hygienecleaningpro.co.uk" className="contact-link">info@max-hygienecleaningpro.co.uk</a></p>
             </div>
             <div className="map-container">
               <iframe

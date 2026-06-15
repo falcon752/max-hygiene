@@ -398,7 +398,7 @@ function buildClientEmail(array $d): string
     <div style="margin-top:24px;text-align:center;padding:20px;background:#f7fafc;border-radius:10px;">
       <p style="color:#718096;font-size:13px;margin:0 0 8px;">Questions? We&rsquo;re here to help:</p>
       <p style="margin:0;font-size:14px;">
-        <a href="mailto:MaxHygiene100@gmail.com" style="color:#3bb0bd;font-weight:600;text-decoration:none;">MaxHygiene100@gmail.com</a>
+        <a href="mailto:info@max-hygienecleaningpro.co.uk" style="color:#3bb0bd;font-weight:600;text-decoration:none;">info@max-hygienecleaningpro.co.uk</a>
         &nbsp;&bull;&nbsp;
         <a href="tel:+447743173136" style="color:#3bb0bd;font-weight:600;text-decoration:none;">+44 7743173136</a>
       </p>

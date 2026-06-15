@@ -146,8 +146,8 @@ export const sendBookingEmails = async (booking: {
         <strong>No payment required today.</strong> Payment will be arranged on the day of service.
       </div>
       <p style="color:#4a5568">If you have any questions, please contact us:</p>
-      <p style="color:#4a5568">Phone: <a href="tel:+447743173136" style="color:#3bb0bd">+44 7743 173136</a><br>
-      Email: <a href="mailto:MaxHygiene100@gmail.com" style="color:#3bb0bd">MaxHygiene100@gmail.com</a></p>
+      <p style="color:#4a5568">Phone: <a href="tel:03333357932" style="color:#3bb0bd">0333 335 7932</a><br>
+      Email: <a href="mailto:info@max-hygienecleaningpro.co.uk" style="color:#3bb0bd">info@max-hygienecleaningpro.co.uk</a></p>
       <p style="color:#718096;font-size:0.85rem">Max-Hygiene Cleaning Services<br>Technology House, 9 Newton Place, Glasgow G3 7PR</p>
     </div>`;
 

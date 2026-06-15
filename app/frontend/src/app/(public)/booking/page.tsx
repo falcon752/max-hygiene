@@ -4,7 +4,7 @@ import { useState, useEffect, useMemo } from 'react';
 import Link from 'next/link';
 
 const API_BASE = process.env.NEXT_PUBLIC_API_URL || 'http://localhost:4000/api';
-const ALL_SLOTS = ['08:00', '09:00', '10:00', '11:00', '13:00', '14:00', '15:00', '16:00'];
+const ALL_SLOTS = ['08:00', '09:00', '10:00', '11:00', '12:00', '13:00', '14:00', '15:00', '16:00', '17:00', '18:00', '19:00', '20:00'];
 const MONTH_NAMES = ['January','February','March','April','May','June','July','August','September','October','November','December'];
 const FREQUENCIES = [
   { id: 'oneTime',  label: 'One-Time',      discount: 0,    badge: null,      desc: 'Single visit' },
@@ -74,6 +74,7 @@ export default function BookingPage() {
   const [toastErr, setToastErr] = useState(false);
   const [qtyRoom, setQtyRoom] = useState<ServiceAPI['rooms'][number]|null>(null);
   const [qtyValue, setQtyValue] = useState(0);
+  const [draftLoaded, setDraftLoaded] = useState(false);
 
   const selectedSvc = services.find(s => s._id === serviceId);
   const prices = useMemo(() => calcPrices(selectedSvc, flatItems, addons, hours, frequency, pricingType),
@@ -107,6 +108,54 @@ export default function BookingPage() {
       }
     }).catch(() => {});
   }, [calYear, calMonth]);
+
+  useEffect(() => {
+    if (typeof window !== 'undefined') {
+      try {
+        const draftStr = localStorage.getItem('maxHygieneBookingDraft');
+        if (draftStr) {
+          const draft = JSON.parse(draftStr);
+          if (draft.step !== undefined) setStep(draft.step);
+          if (draft.icFirst !== undefined) setIcFirst(draft.icFirst);
+          if (draft.icLast !== undefined) setIcLast(draft.icLast);
+          if (draft.icEmail !== undefined) setIcEmail(draft.icEmail);
+          if (draft.icPhone !== undefined) setIcPhone(draft.icPhone);
+          if (draft.serviceId !== undefined) setServiceId(draft.serviceId);
+          if (draft.pricingType !== undefined) setPricingType(draft.pricingType);
+          if (draft.propertyType !== undefined) setPropertyType(draft.propertyType);
+          if (draft.flatItems !== undefined) setFlatItems(draft.flatItems);
+          if (draft.hours !== undefined) setHours(draft.hours);
+          if (draft.hourlyDesc !== undefined) setHourlyDesc(draft.hourlyDesc);
+          if (draft.addons !== undefined) setAddons(draft.addons);
+          if (draft.frequency !== undefined) setFrequency(draft.frequency);
+          if (draft.date !== undefined) setDate(draft.date);
+          if (draft.timeSlot !== undefined) setTimeSlot(draft.timeSlot);
+          if (draft.firstName !== undefined) setFirstName(draft.firstName);
+          if (draft.lastName !== undefined) setLastName(draft.lastName);
+          if (draft.email !== undefined) setEmail(draft.email);
+          if (draft.phone !== undefined) setPhone(draft.phone);
+          if (draft.addressLine !== undefined) setAddressLine(draft.addressLine);
+          if (draft.city !== undefined) setCity(draft.city);
+          if (draft.postcode !== undefined) setPostcode(draft.postcode);
+          if (draft.notes !== undefined) setNotes(draft.notes);
+        }
+      } catch (e) {
+        console.error('Failed to load draft', e);
+      }
+    }
+    setDraftLoaded(true);
+  }, []);
+
+  useEffect(() => {
+    if (draftLoaded && step !== 6 && typeof window !== 'undefined') {
+      const draft = {
+        step, icFirst, icLast, icEmail, icPhone, serviceId, pricingType, propertyType,
+        flatItems, hours, hourlyDesc, addons, frequency, date, timeSlot,
+        firstName, lastName, email, phone, addressLine, city, postcode, notes
+      };
+      localStorage.setItem('maxHygieneBookingDraft', JSON.stringify(draft));
+    }
+  }, [draftLoaded, step, icFirst, icLast, icEmail, icPhone, serviceId, pricingType, propertyType, flatItems, hours, hourlyDesc, addons, frequency, date, timeSlot, firstName, lastName, email, phone, addressLine, city, postcode, notes]);
 
   const showToast = (msg: string, err = false) => { setToast(msg); setToastErr(err); setTimeout(() => setToast(''), 3500); };
 
@@ -268,9 +317,14 @@ export default function BookingPage() {
         }),
       });
       const data = await res.json();
-      if (data.success) { setBookingRef(data.data.ref); setStep(6); window.scrollTo(0,0); }
+      if (data.success) { 
+        setBookingRef(data.data.ref); 
+        setStep(6); 
+        window.scrollTo(0,0); 
+        if (typeof window !== 'undefined') localStorage.removeItem('maxHygieneBookingDraft');
+      }
       else showToast(data.error||'Booking failed. Please try again.', true);
-    } catch { showToast('Network error. Please call +44 7743173136.', true); }
+    } catch { showToast('Network error. Please try again later.', true); }
     finally { setSubmitting(false); }
   };
 

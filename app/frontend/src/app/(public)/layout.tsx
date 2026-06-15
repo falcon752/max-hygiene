@@ -182,8 +182,7 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
               <div className="footer-contact">
                 <p><i className="fas fa-map-marker-alt" /> Technology House, 9 Newton Place, Glasgow G3 7PR</p>
                 <p><i className="fas fa-phone" /> {OFFICE_PHONE}</p>
-                <p><i className="fas fa-phone" /> +44 7743173136</p>
-                <p><i className="fas fa-envelope" /> MaxHygiene100@gmail.com</p>
+                <p><i className="fas fa-envelope" /> info@max-hygienecleaningpro.co.uk</p>
               </div>
             </div>
           </div>
@@ -200,16 +199,6 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
         </footer>
       </main>
 
-      {/* Floating WhatsApp */}
-      <a
-        href="https://wa.me/447743173136"
-        className="floating-whatsapp"
-        target="_blank"
-        rel="noopener noreferrer"
-        aria-label="WhatsApp"
-      >
-        <i className="fab fa-whatsapp" />
-      </a>
     </>
   );
 }
