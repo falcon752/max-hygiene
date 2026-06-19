@@ -11,6 +11,7 @@ import bookingRoutes from './routes/bookings';
 import customerRoutes from './routes/customers';
 import availabilityRoutes from './routes/availability';
 import contactRoutes from './routes/contact';
+import quoteRoutes from './routes/quotes';
 
 const app = express();
 const PORT = process.env.PORT || 4000;
@@ -29,6 +30,7 @@ app.use('/api/bookings', bookingRoutes);
 app.use('/api/customers', customerRoutes);
 app.use('/api/availability', availabilityRoutes);
 app.use('/api/contact', contactRoutes);
+app.use('/api/quotes', quoteRoutes);
 
 app.get('/api/health', (_req, res) => res.json({ ok: true }));
 

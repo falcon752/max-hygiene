@@ -15,6 +15,21 @@ async function request<T>(path: string, options: RequestInit = {}): Promise<T> {
   return data;
 }
 
+async function requestWithTimeout<T>(path: string, options: RequestInit = {}, timeoutMs = 30000): Promise<T> {
+  const controller = new AbortController();
+  const timeout = setTimeout(() => controller.abort(), timeoutMs);
+  try {
+    return await request<T>(path, { ...options, signal: controller.signal });
+  } catch (err) {
+    if (err instanceof DOMException && err.name === 'AbortError') {
+      throw new Error('Request timed out. Please check SMTP settings and try again.');
+    }
+    throw err;
+  } finally {
+    clearTimeout(timeout);
+  }
+}
+
 export const api = {
   // Auth
   login: (username: string, password: string) =>
@@ -100,6 +115,42 @@ export const api = {
     }),
   deleteCustomer: (id: string) =>
     request<{ success: boolean }>(`/customers/${id}`, { method: 'DELETE' }),
+
+  // Quotes
+  sendQuote: (data: {
+    customerId?: string;
+    quote: {
+      quoteRef: string;
+      quoteDate: string;
+      validDays: number;
+      clientName: string;
+      clientEmail: string;
+      clientPhone?: string;
+      jobAddress?: string;
+      notes?: string;
+      hourlyRate: number;
+      taxRate: number;
+      totals: {
+        minutes: number;
+        hours: number;
+        subtotal: number;
+        tax: number;
+        grand: number;
+      };
+      lines: Array<{
+        space: string;
+        qty: number;
+        minsPerUnit: number;
+        difficulty: 'easy' | 'medium' | 'hard';
+        minutes: number;
+        total: number;
+      }>;
+    };
+  }) =>
+    requestWithTimeout<{ success: boolean; message: string }>('/quotes/send', {
+      method: 'POST',
+      body: JSON.stringify(data),
+    }, 35000),
 
   // Availability
   getAvailability: () =>

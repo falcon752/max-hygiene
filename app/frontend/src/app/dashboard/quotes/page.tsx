@@ -1,7 +1,10 @@
 'use client';
 
-import { FormEvent, useMemo, useState } from 'react';
+import { FormEvent, useEffect, useMemo, useState } from 'react';
+import { api } from '@/lib/api';
+import { Customer } from '@/types';
 import Header from '@/components/Header';
+import Modal from '@/components/Modal';
 import styles from './quotes.module.css';
 
 type Difficulty = 'easy' | 'medium' | 'hard';
@@ -18,6 +21,24 @@ interface Preset {
   name: string;
   icon: string;
   lines: Omit<QuoteLine, 'id'>[];
+}
+
+interface QuoteDraft {
+  quoteRef: string;
+  clientName: string;
+  clientEmail: string;
+  clientPhone: string;
+  jobAddress: string;
+  quoteDate: string;
+  validDays: number;
+  hourlyRate: number;
+  taxRate: number;
+  notes: string;
+  lines: QuoteLine[];
+  space: string;
+  qty: number;
+  minsPerUnit: number;
+  difficulty: Difficulty;
 }
 
 const DIFFICULTY_LABELS: Record<Difficulty, string> = {
@@ -73,6 +94,9 @@ const formatCurrency = (value: number) =>
 
 const today = () => new Date().toISOString().slice(0, 10);
 
+const DRAFT_KEY = 'max-hygiene.quote-generator.draft.v1';
+const DEFAULT_NOTES = 'Thank you for the opportunity to quote for this job. We look forward to working with you.';
+
 export default function QuotesPage() {
   const [quoteRef, setQuoteRef] = useState(`MHQ-${Date.now().toString().slice(-5)}`);
   const [clientName, setClientName] = useState('');
@@ -83,12 +107,97 @@ export default function QuotesPage() {
   const [validDays, setValidDays] = useState(30);
   const [hourlyRate, setHourlyRate] = useState(23);
   const [taxRate, setTaxRate] = useState(0);
-  const [notes, setNotes] = useState('Thank you for the opportunity to quote for this job. We look forward to working with you.');
+  const [notes, setNotes] = useState(DEFAULT_NOTES);
   const [lines, setLines] = useState<QuoteLine[]>([]);
   const [space, setSpace] = useState('');
   const [qty, setQty] = useState(1);
   const [minsPerUnit, setMinsPerUnit] = useState(30);
   const [difficulty, setDifficulty] = useState<Difficulty>('easy');
+  const [shareOpen, setShareOpen] = useState(false);
+  const [customers, setCustomers] = useState<Customer[]>([]);
+  const [customerSearch, setCustomerSearch] = useState('');
+  const [selectedCustomerId, setSelectedCustomerId] = useState('');
+  const [loadingCustomers, setLoadingCustomers] = useState(false);
+  const [sendingQuote, setSendingQuote] = useState(false);
+  const [toast, setToast] = useState('');
+  const [draftLoaded, setDraftLoaded] = useState(false);
+
+  useEffect(() => {
+    try {
+      const saved = window.localStorage.getItem(DRAFT_KEY);
+      if (!saved) {
+        setDraftLoaded(true);
+        return;
+      }
+
+      const draft = JSON.parse(saved) as Partial<QuoteDraft>;
+      if (typeof draft.quoteRef === 'string') setQuoteRef(draft.quoteRef);
+      if (typeof draft.clientName === 'string') setClientName(draft.clientName);
+      if (typeof draft.clientEmail === 'string') setClientEmail(draft.clientEmail);
+      if (typeof draft.clientPhone === 'string') setClientPhone(draft.clientPhone);
+      if (typeof draft.jobAddress === 'string') setJobAddress(draft.jobAddress);
+      if (typeof draft.quoteDate === 'string') setQuoteDate(draft.quoteDate);
+      if (typeof draft.validDays === 'number') setValidDays(draft.validDays);
+      if (typeof draft.hourlyRate === 'number') setHourlyRate(draft.hourlyRate);
+      if (typeof draft.taxRate === 'number') setTaxRate(draft.taxRate);
+      if (typeof draft.notes === 'string') setNotes(draft.notes);
+      if (Array.isArray(draft.lines)) setLines(draft.lines);
+      if (typeof draft.space === 'string') setSpace(draft.space);
+      if (typeof draft.qty === 'number') setQty(draft.qty);
+      if (typeof draft.minsPerUnit === 'number') setMinsPerUnit(draft.minsPerUnit);
+      if (draft.difficulty === 'easy' || draft.difficulty === 'medium' || draft.difficulty === 'hard') {
+        setDifficulty(draft.difficulty);
+      }
+    } catch {
+      window.localStorage.removeItem(DRAFT_KEY);
+    } finally {
+      setDraftLoaded(true);
+    }
+  }, []);
+
+  useEffect(() => {
+    if (!draftLoaded) return;
+
+    const timeout = window.setTimeout(() => {
+      const draft: QuoteDraft = {
+        quoteRef,
+        clientName,
+        clientEmail,
+        clientPhone,
+        jobAddress,
+        quoteDate,
+        validDays,
+        hourlyRate,
+        taxRate,
+        notes,
+        lines,
+        space,
+        qty,
+        minsPerUnit,
+        difficulty,
+      };
+      window.localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
+    }, 250);
+
+    return () => window.clearTimeout(timeout);
+  }, [
+    clientEmail,
+    clientName,
+    clientPhone,
+    difficulty,
+    draftLoaded,
+    hourlyRate,
+    jobAddress,
+    lines,
+    minsPerUnit,
+    notes,
+    qty,
+    quoteDate,
+    quoteRef,
+    space,
+    taxRate,
+    validDays,
+  ]);
 
   const lineTotals = useMemo(() => {
     return lines.map((line) => {
@@ -129,17 +238,109 @@ export default function QuotesPage() {
 
   const printQuote = () => window.print();
 
-  const shareQuote = () => {
-    const subject = encodeURIComponent(`Quote ${quoteRef} from Max-Hygiene`);
-    const body = encodeURIComponent(
-      `Hello ${clientName || 'there'},\n\nPlease find your Max-Hygiene quote summary below.\n\nReference: ${quoteRef}\nTotal: ${formatCurrency(totals.grand)}\n\nUse the Download PDF button in the dashboard to save the formal quote as a PDF.`
-    );
-    window.location.href = `mailto:${clientEmail}?subject=${subject}&body=${body}`;
+  const clearDraft = () => {
+    window.localStorage.removeItem(DRAFT_KEY);
+    setQuoteRef(`MHQ-${Date.now().toString().slice(-5)}`);
+    setClientName('');
+    setClientEmail('');
+    setClientPhone('');
+    setJobAddress('');
+    setQuoteDate(today());
+    setValidDays(30);
+    setHourlyRate(23);
+    setTaxRate(0);
+    setNotes(DEFAULT_NOTES);
+    setLines([]);
+    setSpace('');
+    setQty(1);
+    setMinsPerUnit(30);
+    setDifficulty('easy');
+    showToast('Local draft cleared');
+  };
+
+  const showToast = (message: string) => {
+    setToast(message);
+    setTimeout(() => setToast(''), 3500);
+  };
+
+  const loadCustomers = async (search = '') => {
+    setLoadingCustomers(true);
+    try {
+      const res = await api.getCustomers({ limit: 100, search: search || undefined });
+      setCustomers(res.data);
+    } catch {
+      showToast('Could not load customers');
+    } finally {
+      setLoadingCustomers(false);
+    }
+  };
+
+  const openShare = () => {
+    setShareOpen(true);
+    setSelectedCustomerId('');
+    loadCustomers();
+  };
+
+  const selectedCustomer = customers.find((customer) => customer._id === selectedCustomerId);
+
+  const buildQuotePayload = (customer?: Customer) => ({
+    quoteRef,
+    quoteDate,
+    validDays,
+    clientName: customer ? `${customer.firstName} ${customer.lastName}` : clientName,
+    clientEmail: customer?.email || clientEmail,
+    clientPhone: customer?.phone || clientPhone,
+    jobAddress: customer
+      ? [customer.address.line1, customer.address.city, customer.address.postcode].filter(Boolean).join(', ')
+      : jobAddress,
+    notes,
+    hourlyRate,
+    taxRate,
+    totals,
+    lines: lineTotals.map((line) => ({
+      space: line.space,
+      qty: line.qty,
+      minsPerUnit: line.minsPerUnit,
+      difficulty: line.difficulty,
+      minutes: line.minutes,
+      total: line.total,
+    })),
+  });
+
+  const sendQuote = async () => {
+    if (!selectedCustomer) {
+      showToast('Select a customer first');
+      return;
+    }
+    if (lineTotals.length === 0) {
+      showToast('Add quote lines before sending');
+      return;
+    }
+
+    setSendingQuote(true);
+    try {
+      await api.sendQuote({
+        customerId: selectedCustomer._id,
+        quote: buildQuotePayload(selectedCustomer),
+      });
+      setClientName(`${selectedCustomer.firstName} ${selectedCustomer.lastName}`.trim());
+      setClientEmail(selectedCustomer.email);
+      setClientPhone(selectedCustomer.phone);
+      setJobAddress([selectedCustomer.address.line1, selectedCustomer.address.city, selectedCustomer.address.postcode].filter(Boolean).join(', '));
+      setShareOpen(false);
+      showToast(`Quote sent to ${selectedCustomer.email}`);
+    } catch (err) {
+      showToast(err instanceof Error ? err.message : 'Failed to send quote');
+    } finally {
+      setSendingQuote(false);
+    }
   };
 
   return (
     <div className={styles.page}>
       <div className={styles.screenOnly}>
+        {toast && <div className={styles.toast}>{toast}</div>}
+
         <Header title="Quote Generator" subtitle="Build cleaning quotes and export client-ready PDFs" />
 
         <div className={styles.summaryStrip}>
@@ -156,7 +357,7 @@ export default function QuotesPage() {
             <strong>{lines.length}</strong>
           </div>
           <div className={styles.summaryActions}>
-            <button className="btn btn-outline" onClick={shareQuote} disabled={!clientEmail || lines.length === 0}>
+            <button className="btn btn-outline" onClick={openShare} disabled={lines.length === 0}>
               <i className="fas fa-envelope" /> Share
             </button>
             <button className="btn btn-primary" onClick={printQuote} disabled={lines.length === 0}>
@@ -178,6 +379,9 @@ export default function QuotesPage() {
                   onClick={() => setQuoteRef(`MHQ-${Date.now().toString().slice(-5)}`)}
                 >
                   <i className="fas fa-sync-alt" /> New Ref
+                </button>
+                <button className="btn btn-ghost btn-sm" onClick={clearDraft}>
+                  <i className="fas fa-eraser" /> Clear Draft
                 </button>
               </div>
 
@@ -363,6 +567,82 @@ export default function QuotesPage() {
             </div>
           </aside>
         </div>
+
+        <Modal
+          open={shareOpen}
+          onClose={() => setShareOpen(false)}
+          title="Send Quote"
+          size="lg"
+          footer={
+            <>
+              <button className="btn btn-outline" onClick={() => setShareOpen(false)} disabled={sendingQuote}>
+                Cancel
+              </button>
+              <button className="btn btn-primary" onClick={sendQuote} disabled={!selectedCustomer || sendingQuote}>
+                {sendingQuote ? <span className="spinner" style={{ width: 16, height: 16 }} /> : <i className="fas fa-paper-plane" />}
+                {sendingQuote ? 'Sending...' : 'Send Quote PDF'}
+              </button>
+            </>
+          }
+        >
+          <div className={styles.shareModal}>
+            <div className={styles.customerSearch}>
+              <i className="fas fa-search" />
+              <input
+                className="form-control"
+                value={customerSearch}
+                onChange={(e) => setCustomerSearch(e.target.value)}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') loadCustomers(customerSearch);
+                }}
+                placeholder="Search customers by name, email or phone"
+              />
+              <button className="btn btn-outline" onClick={() => loadCustomers(customerSearch)}>
+                Search
+              </button>
+            </div>
+
+            <div className={styles.shareGrid}>
+              <div className={styles.customerList}>
+                {loadingCustomers ? (
+                  <div className={styles.modalState}><span className="spinner" /></div>
+                ) : customers.length === 0 ? (
+                  <div className={styles.modalState}>No customers found</div>
+                ) : customers.map((customer) => {
+                  const active = selectedCustomerId === customer._id;
+                  return (
+                    <button
+                      key={customer._id}
+                      className={`${styles.customerItem} ${active ? styles.customerItemActive : ''}`}
+                      onClick={() => setSelectedCustomerId(customer._id)}
+                    >
+                      <strong>{customer.firstName} {customer.lastName}</strong>
+                      <span>{customer.email}</span>
+                      <small>{customer.phone}</small>
+                    </button>
+                  );
+                })}
+              </div>
+
+              <div className={styles.emailPreview}>
+                <span className={styles.previewLabel}>Email Template</span>
+                <h3>Your Max-Hygiene Cleaning Quote - {quoteRef}</h3>
+                <p>Hi {selectedCustomer ? selectedCustomer.firstName : 'Customer'},</p>
+                <p>Thank you for giving Max-Hygiene the opportunity to quote for your cleaning service.</p>
+                <p>
+                  Your quote is attached as a PDF for your review. The estimated total is
+                  {' '}<strong>{formatCurrency(totals.grand)}</strong>, and the quote is valid for
+                  {' '}<strong>{validDays || 30} days</strong>.
+                </p>
+                <p>If everything looks good, reply to this email and we will confirm the next steps with you.</p>
+                <div className={styles.attachmentPill}>
+                  <i className="fas fa-file-pdf" />
+                  Max-Hygiene-Quote-{quoteRef}.pdf
+                </div>
+              </div>
+            </div>
+          </div>
+        </Modal>
       </div>
 
       <div className={styles.printOnly}>
