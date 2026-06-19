@@ -9,6 +9,7 @@ import styles from './dashboard.module.css';
 const PAGE_TITLES: Record<string, string> = {
   '/dashboard':           'Overview',
   '/dashboard/bookings':  'Bookings',
+  '/dashboard/quotes':    'Quotes',
   '/dashboard/services':  'Services',
   '/dashboard/customers': 'Customers',
   '/dashboard/schedule':  'Schedule',

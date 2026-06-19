@@ -8,6 +8,7 @@ import styles from './Sidebar.module.css';
 const navItems = [
   { href: '/dashboard',           icon: 'fas fa-chart-line',    label: 'Overview' },
   { href: '/dashboard/bookings',  icon: 'fas fa-calendar-check',label: 'Bookings' },
+  { href: '/dashboard/quotes',    icon: 'fas fa-file-invoice',   label: 'Quotes' },
   { href: '/dashboard/services',  icon: 'fas fa-broom',         label: 'Services' },
   { href: '/dashboard/customers', icon: 'fas fa-users',          label: 'Customers' },
   { href: '/dashboard/schedule',  icon: 'fas fa-calendar-alt',  label: 'Schedule' },
