@@ -419,7 +419,7 @@ export default function QuotesPage() {
                   <input className="form-control" type="number" min="0" step="0.5" value={hourlyRate} onChange={(e) => setHourlyRate(Number(e.target.value))} />
                 </label>
                 <label className="form-group">
-                  <span className="form-label">VAT / Tax %</span>
+                  <span className="form-label">VAT %</span>
                   <input className="form-control" type="number" min="0" step="0.5" value={taxRate} onChange={(e) => setTaxRate(Number(e.target.value))} />
                 </label>
               </div>
@@ -505,9 +505,7 @@ export default function QuotesPage() {
                       <tr>
                         <th>Space</th>
                         <th>Qty</th>
-                        <th>Mins/Unit</th>
                         <th>Difficulty</th>
-                        <th>Total Mins</th>
                         <th>Line Total</th>
                         <th />
                       </tr>
@@ -517,9 +515,7 @@ export default function QuotesPage() {
                         <tr key={line.id}>
                           <td>{line.space}</td>
                           <td>{line.qty}</td>
-                          <td>{line.minsPerUnit}</td>
                           <td>{DIFFICULTY_LABELS[line.difficulty]}</td>
-                          <td>{line.minutes}</td>
                           <td><strong>{formatCurrency(line.total)}</strong></td>
                           <td>
                             <button className="btn btn-ghost btn-sm" onClick={() => removeLine(line.id)} title="Remove line">
@@ -732,7 +728,6 @@ function QuoteDocument({
           <tr>
             <th>Description</th>
             <th>Qty</th>
-            <th>Minutes</th>
             <th>Difficulty</th>
             <th>Total</th>
           </tr>
@@ -746,7 +741,6 @@ function QuoteDocument({
             <tr key={line.id}>
               <td>{line.space}</td>
               <td>{line.qty}</td>
-              <td>{line.minutes}</td>
               <td>{DIFFICULTY_LABELS[line.difficulty]}</td>
               <td>{formatCurrency(line.total)}</td>
             </tr>
@@ -755,10 +749,6 @@ function QuoteDocument({
       </table>
 
       <section className={styles.docTotals}>
-        <div>
-          <span>Total minutes</span>
-          <strong>{totals.minutes}</strong>
-        </div>
         <div>
           <span>Total hours</span>
           <strong>{totals.hours.toFixed(2)}</strong>
@@ -772,7 +762,7 @@ function QuoteDocument({
           <strong>{formatCurrency(totals.subtotal)}</strong>
         </div>
         <div>
-          <span>VAT / Tax ({taxRate}%)</span>
+          <span>VAT ({taxRate}%)</span>
           <strong>{formatCurrency(totals.tax)}</strong>
         </div>
         <div className={styles.grandTotal}>
