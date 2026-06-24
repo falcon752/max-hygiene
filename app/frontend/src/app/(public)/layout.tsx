@@ -197,6 +197,11 @@ export default function PublicLayout({ children }: { children: React.ReactNode }
             </div>
           </div>
         </footer>
+
+        {/* Floating WhatsApp Button */}
+        <a href="https://wa.me/447743173136" className="floating-whatsapp" target="_blank" rel="noopener noreferrer">
+          <i className="fab fa-whatsapp"></i>
+        </a>
       </main>
 
     </>
