@@ -204,16 +204,16 @@ export default function QuotesPage() {
       const minutes = line.qty * line.minsPerUnit;
       const base = (minutes / 60) * hourlyRate;
       const markup = base * (MARKUPS[line.difficulty] / 100);
-      const total = base + markup;
+      const total = Number((base + markup).toFixed(2));
       return { ...line, minutes, hours: minutes / 60, markup, total };
     });
   }, [hourlyRate, lines]);
 
   const totals = useMemo(() => {
     const minutes = lineTotals.reduce((sum, line) => sum + line.minutes, 0);
-    const subtotal = lineTotals.reduce((sum, line) => sum + line.total, 0);
-    const tax = subtotal * (taxRate / 100);
-    return { minutes, hours: minutes / 60, subtotal, tax, grand: subtotal + tax };
+    const subtotal = Number(lineTotals.reduce((sum, line) => sum + line.total, 0).toFixed(2));
+    const tax = Number((subtotal * (taxRate / 100)).toFixed(2));
+    return { minutes, hours: minutes / 60, subtotal, tax, grand: Number((subtotal + tax).toFixed(2)) };
   }, [lineTotals, taxRate]);
 
   const addLine = (event: FormEvent) => {
@@ -222,7 +222,7 @@ export default function QuotesPage() {
     if (!name) return;
     setLines((current) => [
       ...current,
-      { id: Date.now(), space: name, qty: Math.max(1, qty), minsPerUnit: Math.max(1, minsPerUnit), difficulty },
+      { id: Date.now() + Math.random(), space: name, qty: Math.max(1, qty), minsPerUnit: Math.max(1, minsPerUnit), difficulty },
     ]);
     setSpace('');
     setQty(1);
@@ -231,7 +231,7 @@ export default function QuotesPage() {
   };
 
   const applyPreset = (preset: Preset) => {
-    setLines(preset.lines.map((line, index) => ({ ...line, id: Date.now() + index })));
+    setLines(preset.lines.map((line, index) => ({ ...line, id: Date.now() + Math.random() + index })));
   };
 
   const removeLine = (id: number) => setLines((current) => current.filter((line) => line.id !== id));
