@@ -157,10 +157,8 @@ export const generateQuotePdf = (quote: QuoteEmailInput): Promise<Buffer> =>
       doc,
       y,
       [
-        { text: 'DESCRIPTION', x: 54, width: 190 },
-        { text: 'QTY', x: 258, width: 38 },
-        { text: 'MINUTES', x: 310, width: 60 },
-        { text: 'DIFFICULTY', x: 384, width: 72 },
+        { text: 'DESCRIPTION', x: 54, width: 300 },
+        { text: 'QTY', x: 380, width: 50 },
         { text: 'TOTAL', x: 472, width: 68, align: 'right' },
       ],
       { bold: true, fill: '#e6f7f9' }
@@ -174,10 +172,8 @@ export const generateQuotePdf = (quote: QuoteEmailInput): Promise<Buffer> =>
       }
       doc.moveTo(42, y - 10).lineTo(553, y - 10).strokeColor('#e2e8f0').lineWidth(0.7).stroke();
       drawRow(doc, y, [
-        { text: safe(line.space, 'Cleaning item'), x: 54, width: 190 },
-        { text: String(line.qty || 0), x: 258, width: 38 },
-        { text: String(line.minutes || 0), x: 310, width: 60 },
-        { text: difficultyLabels[line.difficulty] || 'Easy', x: 384, width: 72 },
+        { text: safe(line.space, 'Cleaning item'), x: 54, width: 300 },
+        { text: String(line.qty || 0), x: 380, width: 50 },
         { text: formatCurrency(line.total), x: 472, width: 68, align: 'right' },
       ]);
       y += 28;
@@ -187,9 +183,6 @@ export const generateQuotePdf = (quote: QuoteEmailInput): Promise<Buffer> =>
     const totalsX = 42;
     const totalValueX = 440;
     const totalRows = [
-      ['Total minutes', String(quote.totals.minutes || 0)],
-      ['Total hours', Number(quote.totals.hours || 0).toFixed(2)],
-      ['Hourly rate', `${formatCurrency(quote.hourlyRate)}/hr`],
       ['Net', formatCurrency(quote.totals.subtotal)],
       [`VAT / Tax (${quote.taxRate || 0}%)`, formatCurrency(quote.totals.tax)],
     ];

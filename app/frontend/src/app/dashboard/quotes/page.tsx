@@ -728,20 +728,18 @@ function QuoteDocument({
           <tr>
             <th>Description</th>
             <th>Qty</th>
-            <th>Difficulty</th>
             <th>Total</th>
           </tr>
         </thead>
         <tbody>
           {lines.length === 0 ? (
             <tr>
-              <td colSpan={5} className={styles.emptyDocLine}>No quote lines added yet.</td>
+              <td colSpan={3} className={styles.emptyDocLine}>No quote lines added yet.</td>
             </tr>
           ) : lines.map((line) => (
             <tr key={line.id}>
               <td>{line.space}</td>
               <td>{line.qty}</td>
-              <td>{DIFFICULTY_LABELS[line.difficulty]}</td>
               <td>{formatCurrency(line.total)}</td>
             </tr>
           ))}
@@ -749,14 +747,6 @@ function QuoteDocument({
       </table>
 
       <section className={styles.docTotals}>
-        <div>
-          <span>Total hours</span>
-          <strong>{totals.hours.toFixed(2)}</strong>
-        </div>
-        <div>
-          <span>Hourly rate</span>
-          <strong>{formatCurrency(hourlyRate)}/hr</strong>
-        </div>
         <div>
           <span>Net</span>
           <strong>{formatCurrency(totals.subtotal)}</strong>
