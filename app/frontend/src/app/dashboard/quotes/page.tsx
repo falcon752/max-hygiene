@@ -39,7 +39,6 @@ interface QuoteDraft {
   qty: number;
   minsPerUnit: number;
   difficulty: Difficulty;
-  serviceType: string;
   discount: number;
   showTotalHours: boolean;
 }
@@ -116,7 +115,6 @@ export default function QuotesPage() {
   const [qty, setQty] = useState(1);
   const [minsPerUnit, setMinsPerUnit] = useState(30);
   const [difficulty, setDifficulty] = useState<Difficulty>('easy');
-  const [serviceType, setServiceType] = useState('');
   const [discount, setDiscount] = useState(0);
   const [showTotalHours, setShowTotalHours] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
@@ -154,7 +152,6 @@ export default function QuotesPage() {
       if (draft.difficulty === 'easy' || draft.difficulty === 'medium' || draft.difficulty === 'hard') {
         setDifficulty(draft.difficulty);
       }
-      if (typeof draft.serviceType === 'string') setServiceType(draft.serviceType);
       if (typeof draft.discount === 'number') setDiscount(draft.discount);
       if (typeof draft.showTotalHours === 'boolean') setShowTotalHours(draft.showTotalHours);
     } catch {
@@ -184,7 +181,6 @@ export default function QuotesPage() {
         qty,
         minsPerUnit,
         difficulty,
-        serviceType,
         discount,
         showTotalHours,
       };
@@ -209,7 +205,6 @@ export default function QuotesPage() {
     space,
     taxRate,
     validDays,
-    serviceType,
     discount,
     showTotalHours,
   ]);
@@ -280,7 +275,6 @@ export default function QuotesPage() {
     setQty(1);
     setMinsPerUnit(30);
     setDifficulty('easy');
-    setServiceType('');
     setDiscount(0);
     setShowTotalHours(false);
     showToast('Local draft cleared');
@@ -324,7 +318,6 @@ export default function QuotesPage() {
     notes,
     hourlyRate,
     taxRate,
-    serviceType,
     discount,
     showTotalHours,
     totals,
@@ -474,10 +467,6 @@ export default function QuotesPage() {
                     <option value={50}>50% off</option>
                   </select>
                 </label>
-                <label className={`form-group ${styles.fullSpan}`}>
-                  <span className="form-label">Service Type</span>
-                  <input className="form-control" value={serviceType} onChange={(e) => setServiceType(e.target.value)} placeholder="e.g., Deep clean, End of tenancy, Regular Standard / commercial cleaning" />
-                </label>
                 <label className={`form-group ${styles.fullSpan}`} style={{ flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
                   <input type="checkbox" checked={showTotalHours} onChange={(e) => setShowTotalHours(e.target.checked)} />
                   <span className="form-label" style={{ marginBottom: 0 }}>Show Total Hours on PDF</span>
@@ -622,7 +611,6 @@ export default function QuotesPage() {
                 notes={notes}
                 hourlyRate={hourlyRate}
                 taxRate={taxRate}
-                serviceType={serviceType}
                 discount={discount}
                 showTotalHours={showTotalHours}
                 lines={lineTotals}
@@ -721,7 +709,6 @@ export default function QuotesPage() {
           notes={notes}
           hourlyRate={hourlyRate}
           taxRate={taxRate}
-          serviceType={serviceType}
           discount={discount}
           showTotalHours={showTotalHours}
           lines={lineTotals}
@@ -743,7 +730,6 @@ function QuoteDocument({
   notes,
   hourlyRate,
   taxRate,
-  serviceType,
   discount,
   showTotalHours,
   lines,
@@ -759,7 +745,6 @@ function QuoteDocument({
   notes: string;
   hourlyRate: number;
   taxRate: number;
-  serviceType: string;
   discount: number;
   showTotalHours: boolean;
   lines: Array<QuoteLine & { minutes: number; hours: number; markup: number; total: number }>;
@@ -784,7 +769,6 @@ function QuoteDocument({
           <strong>Service Quote</strong>
           <span>{quoteRef || 'Draft'}</span>
           <span>{quoteDate ? new Date(quoteDate).toLocaleDateString('en-GB') : new Date().toLocaleDateString('en-GB')}</span>
-          {serviceType && <span style={{ marginTop: '8px', fontWeight: 'bold', color: '#0056b3' }}>{serviceType}</span>}
         </div>
       </header>
 
@@ -809,7 +793,7 @@ function QuoteDocument({
       <table className={styles.quoteTable}>
         <thead>
           <tr>
-            <th>Description</th>
+            <th>Service Type</th>
             <th>Qty</th>
             <th>Total</th>
           </tr>

@@ -35,7 +35,6 @@ export interface QuoteEmailInput {
     grand: number;
   };
   lines: QuoteLineInput[];
-  serviceType?: string;
   discount?: number;
   showTotalHours?: boolean;
 }
@@ -118,13 +117,6 @@ export const generateQuotePdf = (quote: QuoteEmailInput): Promise<Buffer> =>
       .text(safe(quote.quoteRef, 'Draft Quote'), 390, 72, { width: 163, align: 'right' })
       .text(new Date(quote.quoteDate || Date.now()).toLocaleDateString('en-GB'), 390, 88, { width: 163, align: 'right' });
 
-    if (quote.serviceType) {
-      doc
-        .font('Helvetica-Bold')
-        .fillColor('#0056b3')
-        .text(quote.serviceType, 390, 104, { width: 163, align: 'right' });
-    }
-
     doc.moveTo(42, 140).lineTo(553, 140).strokeColor('#e2e8f0').lineWidth(1).stroke();
 
     doc
@@ -169,7 +161,7 @@ export const generateQuotePdf = (quote: QuoteEmailInput): Promise<Buffer> =>
       doc,
       y,
       [
-        { text: 'DESCRIPTION', x: 54, width: 300 },
+        { text: 'SERVICE TYPE', x: 54, width: 300 },
         { text: 'QTY', x: 380, width: 50 },
         { text: 'TOTAL', x: 472, width: 68, align: 'right' },
       ],

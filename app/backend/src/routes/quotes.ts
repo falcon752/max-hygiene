@@ -83,7 +83,6 @@ router.post('/send', protect, async (req: Request, res: Response): Promise<void>
       notes: String(quote.notes || ''),
       hourlyRate: toNumber(quote.hourlyRate, 0),
       taxRate: toNumber(quote.taxRate, 0),
-      serviceType: String(quote.serviceType || '').trim(),
       discount: toNumber(quote.discount, 0),
       showTotalHours: Boolean(quote.showTotalHours),
       totals: {
