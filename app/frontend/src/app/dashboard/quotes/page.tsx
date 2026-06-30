@@ -457,6 +457,7 @@ export default function QuotesPage() {
                   <span className="form-label">Discount %</span>
                   <select className="form-control" value={discount} onChange={(e) => setDiscount(Number(e.target.value))}>
                     <option value={0}>No discount</option>
+                    <option value={5}>5% off</option>
                     <option value={10}>10% off</option>
                     <option value={15}>15% off</option>
                     <option value={20}>20% off</option>
