@@ -731,7 +731,7 @@ function QuoteDocument({
   hourlyRate,
   taxRate,
   discount,
-  showTotalHours,
+  manualTotalHours,
   lines,
   totals,
 }: {
