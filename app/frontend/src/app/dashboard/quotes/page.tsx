@@ -391,7 +391,12 @@ export default function QuotesPage() {
             <button className="btn btn-outline" onClick={openShare} disabled={lines.length === 0}>
               <i className="fas fa-envelope" /> Share
             </button>
-            <button className="btn btn-primary" onClick={printQuote} disabled={lines.length === 0}>
+            <button 
+              className="btn btn-primary" 
+              onClick={printQuote} 
+              disabled={lines.length === 0 || !clientEmail.trim() || !clientPhone.trim()}
+              title={(!clientEmail.trim() || !clientPhone.trim()) ? "Client email and phone are required" : ""}
+            >
               <i className="fas fa-file-pdf" /> Download PDF
             </button>
           </div>
@@ -597,7 +602,12 @@ export default function QuotesPage() {
             <div className={styles.stickyPreview}>
               <div className={styles.previewToolbar}>
                 <span>Live Preview</span>
-                <button className="btn btn-primary btn-sm" onClick={printQuote} disabled={lines.length === 0}>
+                <button 
+                  className="btn btn-primary btn-sm" 
+                  onClick={printQuote} 
+                  disabled={lines.length === 0 || !clientEmail.trim() || !clientPhone.trim()}
+                  title={(!clientEmail.trim() || !clientPhone.trim()) ? "Client email and phone are required" : ""}
+                >
                   <i className="fas fa-file-pdf" /> PDF
                 </button>
               </div>
