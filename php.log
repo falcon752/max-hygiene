@@ -1,4 +1,0 @@
-[Fri May 29 08:57:50 2026] PHP 8.4.10 Development Server (http://localhost:8080) started
-[Fri May 29 08:57:51 2026] [::1]:53247 Accepted
-[Fri May 29 08:58:06 2026] [::1]:53247 [200]: POST /send-booking.php
-[Fri May 29 08:58:06 2026] [::1]:53247 Closing

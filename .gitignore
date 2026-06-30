@@ -20,10 +20,15 @@ yarn-error.log*
 # Next.js
 dashboard/frontend/.next/
 dashboard/frontend/out/
+app/frontend/.next/
+app/frontend/out/
 
 # TypeScript build output
 dashboard/backend/dist/
+app/backend/dist/
 
 # Next.js build info
 dashboard/frontend/tsconfig.tsbuildinfo
 dashboard/frontend/next-env.d.ts
+app/frontend/tsconfig.tsbuildinfo
+app/frontend/next-env.d.ts
