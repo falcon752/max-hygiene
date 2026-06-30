@@ -41,6 +41,7 @@ interface QuoteDraft {
   difficulty: Difficulty;
   discount: number;
   manualTotalHours: string;
+  showTotalHours: boolean;
 }
 
 const DIFFICULTY_LABELS: Record<Difficulty, string> = {
@@ -117,6 +118,7 @@ export default function QuotesPage() {
   const [difficulty, setDifficulty] = useState<Difficulty>('easy');
   const [discount, setDiscount] = useState(0);
   const [manualTotalHours, setManualTotalHours] = useState('');
+  const [showTotalHours, setShowTotalHours] = useState(false);
   const [shareOpen, setShareOpen] = useState(false);
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [customerSearch, setCustomerSearch] = useState('');
@@ -154,6 +156,7 @@ export default function QuotesPage() {
       }
       if (typeof draft.discount === 'number') setDiscount(draft.discount);
       if (typeof draft.manualTotalHours === 'string') setManualTotalHours(draft.manualTotalHours);
+      if (typeof draft.showTotalHours === 'boolean') setShowTotalHours(draft.showTotalHours);
     } catch {
       window.localStorage.removeItem(DRAFT_KEY);
     } finally {
@@ -183,6 +186,7 @@ export default function QuotesPage() {
         difficulty,
         discount,
         manualTotalHours,
+        showTotalHours,
       };
       window.localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
     }, 250);
@@ -207,6 +211,7 @@ export default function QuotesPage() {
     validDays,
     discount,
     manualTotalHours,
+    showTotalHours,
   ]);
 
   const lineTotals = useMemo(() => {
@@ -277,6 +282,7 @@ export default function QuotesPage() {
     setDifficulty('easy');
     setDiscount(0);
     setManualTotalHours('');
+    setShowTotalHours(false);
     showToast('Local draft cleared');
   };
 
@@ -319,7 +325,7 @@ export default function QuotesPage() {
     hourlyRate,
     taxRate,
     discount,
-    manualTotalHours,
+    manualTotalHours: showTotalHours ? manualTotalHours : '',
     totals,
     lines: lineTotals.map((line) => ({
       space: line.space,
@@ -467,10 +473,16 @@ export default function QuotesPage() {
                     <option value={50}>50% off</option>
                   </select>
                 </label>
-                <label className="form-group">
-                  <span className="form-label">Total Hours (Optional)</span>
-                  <input className="form-control" type="number" min="0" step="0.5" value={manualTotalHours} onChange={(e) => setManualTotalHours(e.target.value)} placeholder="Overrides auto-calculated hours" />
+                <label className={`form-group ${styles.fullSpan}`} style={{ flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
+                  <input type="checkbox" checked={showTotalHours} onChange={(e) => setShowTotalHours(e.target.checked)} />
+                  <span className="form-label" style={{ marginBottom: 0 }}>Add Total Hours</span>
                 </label>
+                {showTotalHours && (
+                  <label className="form-group">
+                    <span className="form-label">Total Hours Value</span>
+                    <input className="form-control" type="number" min="0" step="0.5" value={manualTotalHours} onChange={(e) => setManualTotalHours(e.target.value)} placeholder="e.g. 5.5" />
+                  </label>
+                )}
               </div>
             </div>
 
@@ -612,7 +624,7 @@ export default function QuotesPage() {
                 hourlyRate={hourlyRate}
                 taxRate={taxRate}
                 discount={discount}
-                manualTotalHours={manualTotalHours}
+                manualTotalHours={showTotalHours ? manualTotalHours : ''}
                 lines={lineTotals}
                 totals={totals}
               />
@@ -710,7 +722,7 @@ export default function QuotesPage() {
           hourlyRate={hourlyRate}
           taxRate={taxRate}
           discount={discount}
-          manualTotalHours={manualTotalHours}
+          manualTotalHours={showTotalHours ? manualTotalHours : ''}
           lines={lineTotals}
           totals={totals}
         />
