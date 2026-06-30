@@ -84,7 +84,7 @@ router.post('/send', protect, async (req: Request, res: Response): Promise<void>
       hourlyRate: toNumber(quote.hourlyRate, 0),
       taxRate: toNumber(quote.taxRate, 0),
       discount: toNumber(quote.discount, 0),
-      showTotalHours: Boolean(quote.showTotalHours),
+      manualTotalHours: String(quote.manualTotalHours || '').trim(),
       totals: {
         minutes: toNumber(quote.totals?.minutes, 0),
         hours: toNumber(quote.totals?.hours, 0),

@@ -40,7 +40,7 @@ interface QuoteDraft {
   minsPerUnit: number;
   difficulty: Difficulty;
   discount: number;
-  showTotalHours: boolean;
+  manualTotalHours: string;
 }
 
 const DIFFICULTY_LABELS: Record<Difficulty, string> = {
@@ -116,7 +116,7 @@ export default function QuotesPage() {
   const [minsPerUnit, setMinsPerUnit] = useState(30);
   const [difficulty, setDifficulty] = useState<Difficulty>('easy');
   const [discount, setDiscount] = useState(0);
-  const [showTotalHours, setShowTotalHours] = useState(false);
+  const [manualTotalHours, setManualTotalHours] = useState('');
   const [shareOpen, setShareOpen] = useState(false);
   const [customers, setCustomers] = useState<Customer[]>([]);
   const [customerSearch, setCustomerSearch] = useState('');
@@ -153,7 +153,7 @@ export default function QuotesPage() {
         setDifficulty(draft.difficulty);
       }
       if (typeof draft.discount === 'number') setDiscount(draft.discount);
-      if (typeof draft.showTotalHours === 'boolean') setShowTotalHours(draft.showTotalHours);
+      if (typeof draft.manualTotalHours === 'string') setManualTotalHours(draft.manualTotalHours);
     } catch {
       window.localStorage.removeItem(DRAFT_KEY);
     } finally {
@@ -182,7 +182,7 @@ export default function QuotesPage() {
         minsPerUnit,
         difficulty,
         discount,
-        showTotalHours,
+        manualTotalHours,
       };
       window.localStorage.setItem(DRAFT_KEY, JSON.stringify(draft));
     }, 250);
@@ -206,7 +206,7 @@ export default function QuotesPage() {
     taxRate,
     validDays,
     discount,
-    showTotalHours,
+    manualTotalHours,
   ]);
 
   const lineTotals = useMemo(() => {
@@ -276,7 +276,7 @@ export default function QuotesPage() {
     setMinsPerUnit(30);
     setDifficulty('easy');
     setDiscount(0);
-    setShowTotalHours(false);
+    setManualTotalHours('');
     showToast('Local draft cleared');
   };
 
@@ -319,7 +319,7 @@ export default function QuotesPage() {
     hourlyRate,
     taxRate,
     discount,
-    showTotalHours,
+    manualTotalHours,
     totals,
     lines: lineTotals.map((line) => ({
       space: line.space,
@@ -467,9 +467,9 @@ export default function QuotesPage() {
                     <option value={50}>50% off</option>
                   </select>
                 </label>
-                <label className={`form-group ${styles.fullSpan}`} style={{ flexDirection: 'row', alignItems: 'center', gap: '8px' }}>
-                  <input type="checkbox" checked={showTotalHours} onChange={(e) => setShowTotalHours(e.target.checked)} />
-                  <span className="form-label" style={{ marginBottom: 0 }}>Show Total Hours on PDF</span>
+                <label className="form-group">
+                  <span className="form-label">Total Hours (Optional)</span>
+                  <input className="form-control" type="number" min="0" step="0.5" value={manualTotalHours} onChange={(e) => setManualTotalHours(e.target.value)} placeholder="Overrides auto-calculated hours" />
                 </label>
               </div>
             </div>
@@ -612,7 +612,7 @@ export default function QuotesPage() {
                 hourlyRate={hourlyRate}
                 taxRate={taxRate}
                 discount={discount}
-                showTotalHours={showTotalHours}
+                manualTotalHours={manualTotalHours}
                 lines={lineTotals}
                 totals={totals}
               />
@@ -710,7 +710,7 @@ export default function QuotesPage() {
           hourlyRate={hourlyRate}
           taxRate={taxRate}
           discount={discount}
-          showTotalHours={showTotalHours}
+          manualTotalHours={manualTotalHours}
           lines={lineTotals}
           totals={totals}
         />
@@ -746,7 +746,7 @@ function QuoteDocument({
   hourlyRate: number;
   taxRate: number;
   discount: number;
-  showTotalHours: boolean;
+  manualTotalHours: string;
   lines: Array<QuoteLine & { minutes: number; hours: number; markup: number; total: number }>;
   totals: { minutes: number; hours: number; subtotal: number; discountAmount: number; discountedSubtotal: number; tax: number; grand: number };
 }) {
@@ -828,10 +828,10 @@ function QuoteDocument({
           <span>VAT ({taxRate}%)</span>
           <strong>{formatCurrency(totals.tax)}</strong>
         </div>
-        {showTotalHours && (
+        {manualTotalHours && (
           <div>
             <span>Total Hours</span>
-            <strong>{totals.hours.toFixed(2)}</strong>
+            <strong>{manualTotalHours}</strong>
           </div>
         )}
         <div className={styles.grandTotal}>
@@ -843,7 +843,7 @@ function QuoteDocument({
       <footer className={styles.quoteFooter}>
         <p>This quote is valid for {validDays || 30} days.</p>
         <p>Invoices can be paid by BACS, Direct Debit, or agreed payment method.</p>
-        <p style={{ marginTop: '1rem', fontWeight: 'bold', fontSize: '14px', color: '#0056b3' }}>Spotless Homes. Zero Stress</p>
+        <p style={{ marginTop: '1rem', fontWeight: 'bold', fontSize: '14px', color: '#3bb0bd' }}>Spotless Homes. Zero Stress</p>
       </footer>
     </article>
   );

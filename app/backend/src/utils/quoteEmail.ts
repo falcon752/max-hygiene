@@ -36,7 +36,7 @@ export interface QuoteEmailInput {
   };
   lines: QuoteLineInput[];
   discount?: number;
-  showTotalHours?: boolean;
+  manualTotalHours?: string;
 }
 
 const difficultyLabels: Record<QuoteDifficulty, string> = {
@@ -194,8 +194,8 @@ export const generateQuotePdf = (quote: QuoteEmailInput): Promise<Buffer> =>
     }
     totalRows.push([`VAT / Tax (${quote.taxRate || 0}%)`, formatCurrency(quote.totals.tax)]);
     
-    if (quote.showTotalHours) {
-      totalRows.push(['Total Hours', quote.totals.hours.toFixed(2)]);
+    if (quote.manualTotalHours) {
+      totalRows.push(['Total Hours', quote.manualTotalHours]);
     }
 
     totalRows.forEach(([label, value]) => {
@@ -228,7 +228,7 @@ export const generateQuotePdf = (quote: QuoteEmailInput): Promise<Buffer> =>
       .text('Invoices can be paid by BACS, Direct Debit, or agreed payment method.', 42, y + 15)
       .font('Helvetica-Bold')
       .fontSize(12)
-      .fillColor('#0056b3')
+      .fillColor('#3bb0bd')
       .text('Spotless Homes. Zero Stress', 42, y + 35);
 
     doc.end();
